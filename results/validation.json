@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "python": "3.11.15",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "packages": {
+    "torch": "2.5.1+cu121",
+    "numpy": "2.2.6",
+    "transformers": "5.5.0",
+    "pytest": "9.0.2",
+    "matplotlib": "3.10.8"
+  },
+  "gpu_experiments_run": false,
+  "historical_audit": {
+    "checks": 13,
+    "status": "PASS",
+    "unit_tests_passed": 85,
+    "unit_tests_skipped": 1,
+    "skip_reason": "External corpus bytes not installed in the release audit workspace"
+  },
+  "paper_inputs_verified": 783,
+  "figures_regenerated": [
+    "fig_hero.pdf",
+    "fig_mechanism.pdf",
+    "fig_orders.pdf",
+    "fig_pythia.pdf",
+    "fig_rescue.pdf",
+    "fig_scaling.pdf"
+  ],
+  "tables_regenerated": [
+    "tab_capacity.tex",
+    "tab_new_runs.tex",
+    "tab_newseeds.tex",
+    "tab_regrowth_ablation.tex",
+    "tab_regrowth_rank.tex",
+    "tab_replicates.tex"
+  ],
+  "portable_install": {
+    "wheel_installed_in_fresh_venv": true,
+    "report_without_torch": true
+  },
+  "demo": {
+    "device": "CPU",
+    "threads": 1,
+    "seconds": 1.364,
+    "illustrative_not_paper_replication": true,
+    "first_observed_acquisition": {
+      "available": 10,
+      "suppressed": null,
+      "control": 10,
+      "supplied": 10,
+      "wrong_supply": null
+    }
+  },
+  "package_tests": {
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0,
+    "device": "CPU"
+  },
+  "source_commits": {
+    "reference": "66bee7d06c436ba03929e02345f9d9b92b1f2c09",
+    "scaling": "52dc6f20bcae81cf8851dfb97648f0105849f9cc"
+  }
+}

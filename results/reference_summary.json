@@ -1,0 +1,308 @@
+[
+  {
+    "run_id": "160m_circuit_tape38",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": null,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "selected circuit heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "160m_circuit_tape39",
+    "status": "effectiveness_lost_at_observed_step",
+    "observed_through": 2000,
+    "first_observed_acquisition": null,
+    "first_observed_loss_of_effectiveness": 50,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "selected circuit heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "160m_control_tape38",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 350,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "matched control heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "160m_control_tape39",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 300,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "matched control heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "160m_intact_tape38",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 350,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "none",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "160m_intact_tape39",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 300,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "none",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "1b_circuit_tape78",
+    "status": "effectiveness_lost_at_observed_step",
+    "observed_through": 2000,
+    "first_observed_acquisition": 1150,
+    "first_observed_loss_of_effectiveness": 1200,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "selected circuit heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "1b_circuit_tape79",
+    "status": "effectiveness_lost_at_observed_step",
+    "observed_through": 2000,
+    "first_observed_acquisition": 1250,
+    "first_observed_loss_of_effectiveness": 1250,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "selected circuit heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "1b_control_tape78",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 150,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "matched control heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "1b_control_tape79",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 150,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "matched control heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "1b_intact_tape78",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 150,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "none",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "1b_intact_tape79",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 150,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "none",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "410m_circuit_tape38",
+    "status": "effectiveness_lost_at_observed_step",
+    "observed_through": 2000,
+    "first_observed_acquisition": 800,
+    "first_observed_loss_of_effectiveness": 850,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "selected circuit heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "410m_circuit_tape39",
+    "status": "effectiveness_lost_at_observed_step",
+    "observed_through": 2000,
+    "first_observed_acquisition": 850,
+    "first_observed_loss_of_effectiveness": 900,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "selected circuit heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "410m_control_tape38",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 150,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "matched control heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "410m_control_tape39",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 150,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "matched control heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "410m_intact_tape38",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 150,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "none",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  },
+  {
+    "run_id": "410m_intact_tape39",
+    "status": "effective_at_observed_steps",
+    "observed_through": 2000,
+    "first_observed_acquisition": 150,
+    "first_observed_loss_of_effectiveness": null,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "none",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  }
+]

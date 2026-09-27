@@ -1,0 +1,11 @@
+# R4/R5/R6 GPU environment, Python 3.11.15. Local torch: 2.7.1+cu126.
+# Install the matching CUDA 12.6 PyTorch wheel for numerical replay.
+torch==2.7.1
+numpy==1.26.0
+transformers==5.5.0
+huggingface-hub==1.30.0
+safetensors==0.8.0
+tokenizers==0.22.2
+
+# The new audit/thermal helpers import the shared statistical utilities.
+scipy==1.15.3

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "files": {
+    "paper/main.pdf": "543156185eb2e775336ac0b270bf8f976f875d74acd2e410ca3630d848f9a2fd",
+    "paper/provenance.json": "7044ff4f3fda24022c47315310347ebd2d22c73d6a8bdd0dd0d1b41272963eff",
+    "results/reference/160m_circuit_tape38.json": "99e96d7a83466925c8deb1b9448c876fabc624c443c597e70f7cd0b641c5617f",
+    "results/reference/160m_circuit_tape39.json": "c44f22a20b916e03296a6c771729afb54f4e6511a921f258f8ec128489eeb82f",
+    "results/reference/160m_control_tape38.json": "bccb0cffe96232e2954e54c0f2f2d344985ef8985547172ee77c4a1211d64b62",
+    "results/reference/160m_control_tape39.json": "1960ddc73aa8cb406bc1643ee4c1f0ae9b471aad720fcdd0e494dbc5dc868048",
+    "results/reference/160m_intact_tape38.json": "39b0230e2c334274b9e23c9208b43370e7f10d7e4bd55d094ead94e26c6ae8c1",
+    "results/reference/160m_intact_tape39.json": "974cc30cf1bd727ee349243953ac806cc64365002397a631f9b3359a66cfe1c4",
+    "results/reference/1b_circuit_tape78.json": "0dd0b0b729b142e2f5039ac961420121911b3c4d311c940f5f1cb430918829c7",
+    "results/reference/1b_circuit_tape79.json": "82379c553381e695ebeb9d4d2819504ff2675fad254c79d1204629e4e1de82ef",
+    "results/reference/1b_control_tape78.json": "288f8307ce5a9bb6b82fc41952075dd99ee87e3367ed89a4817c660d6a003577",
+    "results/reference/1b_control_tape79.json": "13eabd601d96c054ce07919e502266bb07c7d40be3f463ecd98985c40bf06723",
+    "results/reference/1b_intact_tape78.json": "136650b51e0ab97a4cd64bda2bf0b94d454119a8749a23d8d9d17601014a1378",
+    "results/reference/1b_intact_tape79.json": "8f4aa1b91003ccf8bc6d6a11b1c9bf0c0c191836dcb7543e615bab6a7d986737",
+    "results/reference/410m_circuit_tape38.json": "3abea1ef91ef4ba054fb8c0e35bf44271d8da13979837d9f4e0afa91af152548",
+    "results/reference/410m_circuit_tape39.json": "1ef0fae4b13cb80ca48a42345e1cd42ffc9615218877ef7c8e86f6fad129f0aa",
+    "results/reference/410m_control_tape38.json": "08dad231e163b5a95dabbed54f27544a5c2cbb3181dd086ad97c4f94111fc438",
+    "results/reference/410m_control_tape39.json": "ef4402f046bd16209d9d1b14ab5ad5373b21b1b8c330924da16b8221fa6f09cf",
+    "results/reference/410m_intact_tape38.json": "35eeb1fe87dd6c811d6409067a4db604b9de44e0c75e9a1d1b80b18b1a183429",
+    "results/reference/410m_intact_tape39.json": "17bcd39440b363a72b6a94b32e038c82554fa4fa298e44eb18671487cfb2be8d",
+    "results/reference_summary.json": "6269f799b7dab4569a84037ebb69ff31c4c460ce573064f04dab29542f865e26"
+  }
+}

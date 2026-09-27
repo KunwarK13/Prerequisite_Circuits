@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "Please cite this software and the accompanying manuscript."
+type: software
+title: "Prerequisite Circuits: Intervention Effectiveness During Learning"
+authors:
+  - family-names: Kalra
+    given-names: Kunwar
+  - family-names: Patlolla
+    given-names: Thanush
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/KunwarK13/prerequisite-circuits"
+abstract: "Tools and reference evidence for measuring whether interventions remain effective during learning."

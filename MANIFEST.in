@@ -1,0 +1,4 @@
+include LICENSE.md THIRD_PARTY_NOTICES.md
+exclude tests/test_artifacts.py
+exclude tests/test_reference_parity.py
+exclude tests/test_paper_records.py

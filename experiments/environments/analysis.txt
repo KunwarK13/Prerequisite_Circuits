@@ -1,0 +1,8 @@
+# Tested CPU audit/build environment, Python 3.11.15.
+# The local torch build was 2.5.1+cu121; no GPU is needed for these checks.
+torch==2.5.1
+numpy==2.2.6
+scipy==1.17.1
+transformers==5.5.0
+matplotlib==3.10.8
+pytest==9.0.2

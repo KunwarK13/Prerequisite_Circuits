@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "assets": {
+    "controlled-checkpoints": {
+      "filename": "controlled-checkpoints.zip",
+      "bytes": 455843042,
+      "sha256": "5d9b0446e35cecc2d11742b24e3def0777e5935cb85500a26e44bc191aa1061b",
+      "url": "",
+      "description": "Original small-model checkpoints and saved evaluation panels."
+    },
+    "paper-inputs": {
+      "filename": "paper-inputs.zip",
+      "bytes": 28460573,
+      "sha256": "049af56d0c63f30f1a15a8843b9b8a658ff420d5710e60d9085c1c14436489d7",
+      "url": "",
+      "description": "Raw paper records and execution bindings; excludes checkpoint tensors."
+    },
+    "reference-source": {
+      "filename": "reference-source.zip",
+      "bytes": 7455911,
+      "sha256": "2d4d4a28733ba8cf6d453f3d1e5a141ad043c53f857d7f3093ab98b2365d6a2b",
+      "url": "",
+      "description": "Immutable original controlled/160M source, records, protocols, and audit entry point."
+    },
+    "scaling-source": {
+      "filename": "scaling-source.zip",
+      "bytes": 1359097,
+      "sha256": "6ba82cba1dfaede7a1386387784e0177a522c78451faa4410e539334771bf37f",
+      "url": "",
+      "description": "Immutable larger-model implementations, tests, configurations, and provenance."
+    }
+  }
+}

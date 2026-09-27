@@ -1,0 +1,408 @@
+{
+  "schema_version": 1,
+  "run_id": "160m_circuit_tape39",
+  "criterion": {
+    "maximum_suppressed": 0.2,
+    "minimum_drop": 0.3,
+    "acquisition": 0.8
+  },
+  "metadata": {
+    "model": "Pythia-160m",
+    "arm": "circuit",
+    "tape": "39",
+    "source_path": "results/extensions/pythia_scaling/complete-training-horizon-160m-figures-v1/runs/scaling/figures/training_horizon_160m_v1.tsv",
+    "source_sha256": "b32b39e6c47004d5259dfca35d8b1ea478bf2cf1bfc0000890b6d3a3f16bf1e1",
+    "source_commit": "52dc6f20bcae81cf8851dfb97648f0105849f9cc",
+    "evaluation": "native model with training intervention removed",
+    "acquisition_definition": "Target accuracy >= 0.8 only; not the paper compound key-dependence criterion",
+    "selection": "Full fixed-horizon cohort, all recorded arms and tapes; no outcome filtering",
+    "source_record_path": "results/extensions/pythia_scaling/complete-training-horizon-160m-v1/runs/scaling/horizon_160m_v1/160m_step1000/tape39_circuit_fp32/result.json",
+    "source_record_sha256": "e4e19c85c4dfe62bdc809e06fbf8128f70b2c1de052b0befe803b8506d9f6e90",
+    "training_intervention": "selected circuit heads on target-training rows",
+    "training_heads": [
+      [
+        5,
+        6
+      ],
+      [
+        4,
+        11
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        10
+      ]
+    ],
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "diagnostic_heads": [
+      [
+        5,
+        6
+      ],
+      [
+        4,
+        11
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        10
+      ]
+    ],
+    "label": "160M \u00b7 suppressed \u00b7 tape 39"
+  },
+  "observations": [
+    {
+      "step": 0,
+      "target_available": 0.0,
+      "prerequisite_available": 0.77734375,
+      "prerequisite_suppressed": 0.00390625,
+      "target_suppressed": 0.0,
+      "background": null
+    },
+    {
+      "step": 50,
+      "target_available": 0.0,
+      "prerequisite_available": 0.28515625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0,
+      "background": null
+    },
+    {
+      "step": 100,
+      "target_available": 0.0,
+      "prerequisite_available": 0.45703125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0078125,
+      "background": null
+    },
+    {
+      "step": 150,
+      "target_available": 0.0,
+      "prerequisite_available": 0.58203125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0390625,
+      "background": null
+    },
+    {
+      "step": 200,
+      "target_available": 0.0,
+      "prerequisite_available": 0.80859375,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0234375,
+      "background": null
+    },
+    {
+      "step": 250,
+      "target_available": 0.0,
+      "prerequisite_available": 0.7890625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03515625,
+      "background": null
+    },
+    {
+      "step": 300,
+      "target_available": 0.0,
+      "prerequisite_available": 0.80078125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.015625,
+      "background": null
+    },
+    {
+      "step": 350,
+      "target_available": 0.0,
+      "prerequisite_available": 0.8359375,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03125,
+      "background": null
+    },
+    {
+      "step": 400,
+      "target_available": 0.0,
+      "prerequisite_available": 0.83984375,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03125,
+      "background": null
+    },
+    {
+      "step": 450,
+      "target_available": 0.0,
+      "prerequisite_available": 0.875,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03125,
+      "background": null
+    },
+    {
+      "step": 500,
+      "target_available": 0.0,
+      "prerequisite_available": 0.84765625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03125,
+      "background": null
+    },
+    {
+      "step": 550,
+      "target_available": 0.0,
+      "prerequisite_available": 0.91015625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03125,
+      "background": null
+    },
+    {
+      "step": 600,
+      "target_available": 0.0,
+      "prerequisite_available": 0.890625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03125,
+      "background": null
+    },
+    {
+      "step": 650,
+      "target_available": 0.0,
+      "prerequisite_available": 0.921875,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03515625,
+      "background": null
+    },
+    {
+      "step": 700,
+      "target_available": 0.0,
+      "prerequisite_available": 0.9296875,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0234375,
+      "background": null
+    },
+    {
+      "step": 750,
+      "target_available": 0.0,
+      "prerequisite_available": 0.9140625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.01953125,
+      "background": null
+    },
+    {
+      "step": 800,
+      "target_available": 0.0,
+      "prerequisite_available": 0.90625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03515625,
+      "background": null
+    },
+    {
+      "step": 850,
+      "target_available": 0.0,
+      "prerequisite_available": 0.92578125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0546875,
+      "background": null
+    },
+    {
+      "step": 900,
+      "target_available": 0.0,
+      "prerequisite_available": 0.89453125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03125,
+      "background": null
+    },
+    {
+      "step": 950,
+      "target_available": 0.0,
+      "prerequisite_available": 0.90625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.01171875,
+      "background": null
+    },
+    {
+      "step": 1000,
+      "target_available": 0.0,
+      "prerequisite_available": 0.90234375,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.05859375,
+      "background": null
+    },
+    {
+      "step": 1050,
+      "target_available": 0.0,
+      "prerequisite_available": 0.91796875,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0546875,
+      "background": null
+    },
+    {
+      "step": 1100,
+      "target_available": 0.0,
+      "prerequisite_available": 0.9296875,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.046875,
+      "background": null
+    },
+    {
+      "step": 1150,
+      "target_available": 0.0,
+      "prerequisite_available": 0.92578125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0625,
+      "background": null
+    },
+    {
+      "step": 1200,
+      "target_available": 0.0,
+      "prerequisite_available": 0.91796875,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0546875,
+      "background": null
+    },
+    {
+      "step": 1250,
+      "target_available": 0.0,
+      "prerequisite_available": 0.9453125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.02734375,
+      "background": null
+    },
+    {
+      "step": 1300,
+      "target_available": 0.0,
+      "prerequisite_available": 0.90234375,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.05078125,
+      "background": null
+    },
+    {
+      "step": 1350,
+      "target_available": 0.0,
+      "prerequisite_available": 0.91796875,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0390625,
+      "background": null
+    },
+    {
+      "step": 1400,
+      "target_available": 0.0,
+      "prerequisite_available": 0.93359375,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.07421875,
+      "background": null
+    },
+    {
+      "step": 1450,
+      "target_available": 0.0,
+      "prerequisite_available": 0.9375,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.04296875,
+      "background": null
+    },
+    {
+      "step": 1500,
+      "target_available": 0.0,
+      "prerequisite_available": 0.9453125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.05078125,
+      "background": null
+    },
+    {
+      "step": 1550,
+      "target_available": 0.0,
+      "prerequisite_available": 0.94140625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0390625,
+      "background": null
+    },
+    {
+      "step": 1600,
+      "target_available": 0.0,
+      "prerequisite_available": 0.92578125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.046875,
+      "background": null
+    },
+    {
+      "step": 1650,
+      "target_available": 0.0,
+      "prerequisite_available": 0.94140625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0390625,
+      "background": null
+    },
+    {
+      "step": 1700,
+      "target_available": 0.0,
+      "prerequisite_available": 0.94921875,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03515625,
+      "background": null
+    },
+    {
+      "step": 1750,
+      "target_available": 0.0,
+      "prerequisite_available": 0.94140625,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.05859375,
+      "background": null
+    },
+    {
+      "step": 1800,
+      "target_available": 0.0,
+      "prerequisite_available": 0.9375,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.0390625,
+      "background": null
+    },
+    {
+      "step": 1850,
+      "target_available": 0.0,
+      "prerequisite_available": 0.953125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03125,
+      "background": null
+    },
+    {
+      "step": 1900,
+      "target_available": 0.0,
+      "prerequisite_available": 0.9453125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03515625,
+      "background": null
+    },
+    {
+      "step": 1950,
+      "target_available": 0.0,
+      "prerequisite_available": 0.953125,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.03125,
+      "background": null
+    },
+    {
+      "step": 2000,
+      "target_available": 0.0,
+      "prerequisite_available": 0.94921875,
+      "prerequisite_suppressed": 0.0,
+      "target_suppressed": 0.046875,
+      "background": null
+    }
+  ],
+  "summary": {
+    "run_id": "160m_circuit_tape39",
+    "status": "effectiveness_lost_at_observed_step",
+    "observed_through": 2000,
+    "first_observed_acquisition": null,
+    "first_observed_loss_of_effectiveness": 50,
+    "measured_checks": 41,
+    "missing_checks": 0,
+    "criterion": {
+      "maximum_suppressed": 0.2,
+      "minimum_drop": 0.3,
+      "acquisition": 0.8
+    },
+    "training_intervention": "selected circuit heads on target-training rows",
+    "diagnostic_intervention": "original selected circuit heads, identical definition in every training arm",
+    "interpretation": "These checks describe the supplied probe at observed updates. They do not establish continuous suppression, causal mediation, or impossibility of learning."
+  }
+}
