@@ -1,5 +1,7 @@
 # Prerequisite Circuits
 
+[![Tests](https://github.com/KunwarK13/Prerequisite_Circuits/actions/workflows/test.yml/badge.svg)](https://github.com/KunwarK13/Prerequisite_Circuits/actions/workflows/test.yml)
+
 **Track what an intervention removes—and whether it stays removed as a model learns.**
 
 Code and evidence accompanying *When Data Can Teach: Prerequisite Circuits Gate

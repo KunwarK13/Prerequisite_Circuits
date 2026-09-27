@@ -37,7 +37,7 @@
   "portable_install": {
     "wheel_installed_in_fresh_venv": true,
     "report_without_torch": true,
-    "fresh_clone_tests_passed": 17,
+    "fresh_clone_tests_passed": 22,
     "fresh_clone_tests_skipped": 4,
     "skip_reason": "Optional Torch/model tests and downloaded-record checks are absent in the base-only environment"
   },
@@ -65,15 +65,16 @@
     "scaling": "52dc6f20bcae81cf8851dfb97648f0105849f9cc"
   },
   "github_actions": {
-    "tested_commit": "6cf4b39",
+    "tested_commit": "e9ae8de",
     "conclusion": "success",
-    "url": "https://github.com/KunwarK13/Prerequisite_Circuits/actions/runs/36290598496",
+    "url": "https://github.com/KunwarK13/Prerequisite_Circuits/actions/runs/36292071140",
     "python_versions": [
       "3.10",
       "3.11",
       "3.12"
     ],
-    "cpu_pytorch_job": true
+    "cpu_pytorch_job": true,
+    "browser_job": true
   },
   "browser": {
     "engine": "Chrome via Playwright",

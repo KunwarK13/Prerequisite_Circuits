@@ -19,7 +19,10 @@ branches. See [GitHub flow](https://docs.github.com/en/get-started/using-github/
 
 Normal bug fixes and public improvements can happen directly through public
 feature branches. A permanent public `develop` branch is unnecessary for this
-project. The private workspace remains active; it is not a read-only archive.
+project. The private workspace remains active; it is not a read-only archive. Keep its
+`software` branch aligned with public `main` as a starting point for new private
+research branches. Copy or cherry-pick reviewed changes into a clean public
+feature branch when they are ready.
 
 ## Validate a change
 
