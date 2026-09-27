@@ -40,7 +40,7 @@ def test_missing_checks_remain_visible():
     assert trajectory.summary()["missing_checks"] == 2
 
 
-@pytest.mark.parametrize("value", [-0.01, 1.01, float("nan"), float("inf")])
+@pytest.mark.parametrize("value", [-0.01, 1.01, float("nan"), float("inf"), True, "0.5"])
 def test_invalid_accuracy_rejected(value):
     with pytest.raises(ValueError):
         Observation(0, value)
@@ -64,7 +64,8 @@ def test_report_recomputes_summary_and_escapes_user_labels(tmp_path):
     assert Trajectory.load(path).summary()["status"] == "unmeasured"
     output = tmp_path / "report.html"
     write_html([trajectory], output)
-    assert "<script>" not in output.read_text()
+    assert "<script>alert(1)</script>" not in output.read_text()
+    assert "\\u003cscript\\u003e" in output.read_text()
 
 
 def test_threshold_is_inclusive_and_criterion_is_recorded():
@@ -76,3 +77,46 @@ def test_threshold_is_inclusive_and_criterion_is_recorded():
 def test_missing_threshold_rejected():
     with pytest.raises(ValueError, match="required"):
         Criterion(maximum_suppressed=None)
+
+
+def test_report_embeds_validated_records_and_rejects_empty_input(tmp_path):
+    from html.parser import HTMLParser
+
+    class DataParser(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.reading = False
+            self.data = ""
+
+        def handle_starttag(self, tag, attributes):
+            self.reading = tag == "script" and dict(attributes).get("id") == "records"
+
+        def handle_data(self, data):
+            if self.reading:
+                self.data += data
+
+        def handle_endtag(self, tag):
+            if tag == "script":
+                self.reading = False
+
+    trajectory = Trajectory(
+        "</script><script>alert('x')</script>", observations=[Observation(0, 0.1)]
+    )
+    destination = tmp_path / "report.html"
+    write_html([trajectory], destination)
+    parser = DataParser()
+    parser.feed(destination.read_text())
+    assert json.loads(parser.data) == [trajectory.to_dict()]
+    with pytest.raises(ValueError, match="at least one"):
+        write_html([], destination)
+
+
+def test_cli_accepts_exported_collection(tmp_path, monkeypatch, capsys):
+    from prerequisite_circuits.cli import main
+
+    path = tmp_path / "records.json"
+    trajectory = Trajectory("record", observations=[Observation(0, 0.3)])
+    path.write_text(json.dumps([trajectory.to_dict(), trajectory.to_dict()]))
+    monkeypatch.setattr("sys.argv", ["prereq", "report", str(path)])
+    main()
+    assert json.loads(capsys.readouterr().out) == [trajectory.summary(), trajectory.summary()]

@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; connect-src 'none'">
+<title>Prerequisite Circuits · Intervention report</title>
+<style>
+:root{color-scheme:light;--ink:#172d3b;--muted:#536874;--line:#dce5e9;--accent:#006b64;--paper:#fff;--wash:#f3f6f7}
+*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font:15px/1.55 system-ui,-apple-system,sans-serif}
+button,input,select{font:inherit}button,select{border:1px solid #b9cbd0;border-radius:7px;background:white;color:var(--ink);padding:7px 12px}
+button{cursor:pointer}button:hover{background:#eaf3f1}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #31a39a;outline-offset:3px}
+header,main,footer{max-width:1260px;margin:auto;padding:24px}header{padding-top:38px;padding-bottom:20px}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:750;color:var(--accent)}
+h1{font-size:clamp(28px,4vw,40px);line-height:1.18;letter-spacing:-.035em;margin:10px 0 12px;font-weight:700}
+h2{font-size:18px;letter-spacing:-.02em;margin:0 0 4px}p{margin:6px 0;color:var(--muted)}.intro{max-width:740px}
+.heading,.toolbar,.controls{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.offline{font-size:12px;color:var(--accent);border:1px solid #a7cec5;border-radius:999px;padding:4px 10px;background:#f0faf7}
+main{padding-top:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:4px 0 20px}
+.stat{border-left:3px solid #91bcb5;padding:2px 16px}.stat strong{display:block;font-size:25px;font-variant-numeric:tabular-nums}.stat span{font-size:12px;color:var(--muted)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px}
+.small{font-size:12px}.controls{justify-content:flex-start;margin-top:14px;gap:8px}.run-chip{display:inline-flex;align-items:center;gap:7px;max-width:100%;border:1px solid var(--line);border-radius:6px;padding:5px 9px;font-size:12px;cursor:pointer}
+.run-chip input{accent-color:var(--accent)}.run-chip span:last-child{overflow-wrap:anywhere}.swatch{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:18px}.chart-card{min-width:0;padding-bottom:10px}.chart{display:block;width:100%;height:auto;margin-top:10px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:10px}.line-key{display:inline-block;width:22px;border-top:2px solid #526e7a;vertical-align:middle;margin-right:5px}.dashed{border-top-style:dashed}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px;text-align:left}th{font-weight:650;color:var(--muted);padding:12px 10px;white-space:nowrap}td{padding:12px 10px;border-top:1px solid var(--line);font-variant-numeric:tabular-nums;vertical-align:top}
+td:first-child{min-width:150px;overflow-wrap:anywhere;max-width:280px}.badge{display:inline-block;padding:3px 8px;border-radius:5px;font-size:11px;white-space:nowrap;background:#edf2f4;color:#455e69}
+.good{background:#e5f3ed;color:#185c47}.changed{background:#fff0d8;color:#7c4e08}.missing{background:#eff1f4;color:#536874}
+.inspector{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}.field label{display:block;font-size:12px;font-weight:650;margin-bottom:5px}.field select{width:100%;min-width:0}
+.measurements{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.measurement{padding:12px;background:var(--wash);border-radius:7px}.measurement span{display:block;font-size:11px;color:var(--muted)}.measurement strong{display:block;font-size:22px}
+.context{display:grid;grid-template-columns:155px 1fr;gap:7px 16px;font-size:12px}.context dt{color:var(--muted)}.context dd{margin:0;overflow-wrap:anywhere}
+details{margin-top:16px;font-size:12px}summary{cursor:pointer;font-weight:650}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--wash);padding:14px;border-radius:6px;max-height:350px;overflow:auto}
+.note{border-left:3px solid #9bb5bf;padding:0 0 0 14px;margin:4px 0 20px;font-size:12px;color:var(--muted)}footer{padding-top:0;font-size:12px;color:var(--muted)}
+#tooltip{position:fixed;pointer-events:none;background:#142c3b;color:white;border-radius:7px;padding:9px 12px;font-size:12px;z-index:5;max-width:290px;white-space:pre-line;box-shadow:0 5px 20px #162d3925}
+noscript{display:block;padding:20px;background:#fff0d8}.empty{color:var(--muted);font-size:12px}
+@media(max-width:760px){header,main,footer{padding:18px}.charts{grid-template-columns:1fr}.card{padding:16px}.stats{gap:4px}.stat{padding-left:10px}.measurements{grid-template-columns:1fr 1fr}.inspector{grid-template-columns:1fr}.context{grid-template-columns:1fr;gap:3px}.context dd{margin-bottom:8px}}
+@media print{body{background:white}header,main{padding:12px}.toolbar button,.controls,#tooltip{display:none}.card{break-inside:avoid}.charts{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="heading"><div class="eyebrow">Prerequisite Circuits / Research tools</div><span class="offline">Offline · data embedded in this file</span></div>
+  <h1>Does the intervention stay effective?</h1>
+  <p class="intro">Compare target acquisition with the measured prerequisite computation throughout training. Inspect the actual observations, intervention scope, and criterion behind each result.</p>
+</header>
+<noscript>Enable JavaScript to explore this offline report. The original JSON records remain the authoritative data.</noscript>
+<main>
+  <section class="stats" aria-label="Selected evidence">
+    <div class="stat"><strong id="run-count">—</strong><span>runs selected</span></div>
+    <div class="stat"><strong id="observation-count">—</strong><span>recorded observations</span></div>
+    <div class="stat"><strong id="horizon">—</strong><span>maximum observed update</span></div>
+  </section>
+  <section class="card" aria-label="Choose runs">
+    <div class="toolbar"><div><h2>Compare runs</h2><p class="small">Colors identify runs. Selection changes the view, never the records.</p></div>
+      <div><button id="show-all">Show all</button> <button id="clear">Clear</button> <button id="download">Download records</button></div>
+    </div>
+    <div class="controls" id="runs"></div>
+  </section>
+  <div class="charts">
+    <section class="card chart-card">
+      <h2>Target acquisition</h2><p class="small">Accuracy under the recorded evaluation conditions.</p>
+      <div class="legend"><span><i class="line-key"></i>Training intervention removed</span><span><i class="line-key dashed"></i>Diagnostic intervention active</span></div>
+      <svg id="target-chart" class="chart" viewBox="0 0 560 300" role="img" aria-label="Target accuracy by observed training update"></svg>
+    </section>
+    <section class="card chart-card">
+      <h2>Prerequisite probe</h2><p class="small">Compare suppression against the same state with the computation available.</p>
+      <div class="legend"><span><i class="line-key"></i>Diagnostic intervention active</span><span><i class="line-key dashed"></i>Computation available</span></div>
+      <svg id="probe-chart" class="chart" viewBox="0 0 560 300" role="img" aria-label="Prerequisite probe accuracy by observed training update"></svg>
+    </section>
+  </div>
+  <p class="note">Points are measured updates; connecting lines are visual guides. Missing measurements create gaps. The diagnostic mask can differ from the training mask—check the run context below. Hover or tap a point, or use the observation inspector.</p>
+  <section class="card">
+    <h2>Observed outcomes</h2><p class="small">First crossings use each run’s declared criterion. No averaging across runs or tapes.</p>
+    <div class="scroll"><table><thead><tr><th>Run</th><th>Probe criterion</th><th>Last update</th><th>First acquisition</th><th>First criterion loss</th><th>Missing checks</th></tr></thead><tbody id="outcomes"></tbody></table></div>
+  </section>
+  <section class="card">
+    <h2>Inspect an observation</h2><p class="small">Exact values and context, including hidden runs.</p>
+    <div class="inspector">
+      <div class="field"><label for="inspect-run">Run</label><select id="inspect-run"></select></div>
+      <div class="field"><label for="inspect-step">Observed update</label><select id="inspect-step"></select></div>
+    </div>
+    <div class="measurements" id="measurements"></div>
+    <dl class="context" id="context"></dl>
+    <details><summary>Recorded metadata and criterion</summary><pre id="metadata"></pre></details>
+  </section>
+  <p class="note">A criterion is a check on the declared probe at measured updates. “Not observed” does not mean impossible, and a first acquisition crossing need not persist. Neither low probe accuracy nor temporal ordering alone establishes causal mediation or complete removal of a computation.</p>
+</main>
+<footer>Generated by Prerequisite Circuits. This report makes no network requests. Sharing this HTML file shares all embedded measurements and metadata.</footer>
+<div id="tooltip" role="status" hidden></div>
+<script id="records" type="application/json">__TRAJECTORY_DATA__</script>
+<script>
+"use strict";
+const records = JSON.parse(document.getElementById("records").textContent);
+const colors = ["#006e68", "#b74c32", "#5065bd", "#987018", "#8a4994", "#277aa2", "#687d29", "#a84e70"];
+const runColor = index => colors[index] || "hsl(" + ((index * 137.508) % 360) + ",60%,36%)";
+const selected = new Set(records.map((_, i) => i));
+const byId = id => document.getElementById(id);
+const number = value => value == null ? "Not observed" : value.toLocaleString("en-US");
+const accuracy = value => value == null ? "Not measured" : (value * 100).toFixed(1) + "%";
+const label = record => String(record.metadata.label || record.run_id);
+const statuses = {
+  effective_at_observed_steps: ["Met at measured updates", "good"],
+  effectiveness_lost_at_observed_step: ["Criterion lost", "changed"],
+  initially_ineffective_then_effective: ["Met only later", "changed"],
+  criterion_not_met: ["Criterion not met", "missing"],
+  unmeasured: ["Probe not measured", "missing"]
+};
+function element(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text != null) node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+function svgElement(tag, attrs, text) {
+  const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  Object.entries(attrs || {}).forEach(([key, value]) => node.setAttribute(key, value));
+  if (text != null) node.textContent = text;
+  return node;
+}
+records.forEach((record, i) => {
+  const chip = element("label", null, "run-chip");
+  const input = element("input");
+  input.type = "checkbox";
+  input.checked = true;
+  input.dataset.index = i;
+  input.addEventListener("change", () => {
+    input.checked ? selected.add(i) : selected.delete(i);
+    render();
+  });
+  const swatch = element("span", null, "swatch");
+  swatch.style.background = runColor(i);
+  chip.append(input, swatch, element("span", label(record)));
+  byId("runs").append(chip);
+  const option = element("option", record.run_id);
+  option.value = i;
+  byId("inspect-run").append(option);
+});
+const tooltip = byId("tooltip");
+function showPoint(event, record, observation, field, series) {
+  tooltip.textContent = label(record) + "\nUpdate " + number(observation.step) + " · " + series + "\n" + accuracy(observation[field]) + " (" + String(observation[field]) + ")";
+  tooltip.hidden = false;
+  tooltip.style.left = Math.max(8, Math.min(event.clientX + 12, window.innerWidth - tooltip.offsetWidth - 8)) + "px";
+  tooltip.style.top = Math.max(8, Math.min(event.clientY + 12, window.innerHeight - tooltip.offsetHeight - 8)) + "px";
+}
+function chart(id, fields, seriesLabels, indices, horizon) {
+  const svg = byId(id);
+  svg.replaceChildren();
+  const left = 45, top = 22, width = 498, height = 224;
+  const x = step => left + step / Math.max(1, horizon) * width;
+  const y = value => top + (1 - value) * height;
+  for (let tick = 0; tick <= 4; tick++) {
+    const value = tick / 4;
+    svg.append(svgElement("line", {x1:left, x2:left+width, y1:y(value), y2:y(value), stroke:"#e5ebee"}));
+    svg.append(svgElement("text", {x:left-8, y:y(value)+4, "text-anchor":"end", fill:"#536874", "font-size":11}, Math.round(value*100)+"%"));
+    const step = horizon * value;
+    if (horizon || tick === 0) svg.append(svgElement("text", {x:x(step), y:height+top+22, "text-anchor":"middle", fill:"#536874", "font-size":11}, Math.round(step).toLocaleString("en-US")));
+  }
+  svg.append(svgElement("text", {x:left+width/2, y:290, "text-anchor":"middle", fill:"#536874", "font-size":11}, "Training updates"));
+  let points = 0;
+  indices.forEach(index => {
+    const record = records[index], color = runColor(index);
+    fields.forEach((field, seriesIndex) => {
+      let path = "", connected = false;
+      record.observations.forEach(observation => {
+        const value = observation[field];
+        if (value == null) { connected = false; return; }
+        path += (connected ? "L" : "M") + x(observation.step) + "," + y(value) + " ";
+        connected = true;
+      });
+      svg.append(svgElement("path", {d:path, fill:"none", stroke:color, "stroke-width":2, "stroke-dasharray":seriesIndex ? "5 4" : "none", opacity:seriesIndex ? 0.5 : 1}));
+      record.observations.forEach(observation => {
+        const value = observation[field];
+        if (value == null) return;
+        points++;
+        const point = svgElement("circle", {cx:x(observation.step), cy:y(value), r:3.2, fill:seriesIndex ? "#fff" : color, stroke:color, "stroke-width":1, "data-step":observation.step, "data-field":field});
+        point.append(svgElement("title", {}, record.run_id + ", update " + observation.step + ", " + seriesLabels[seriesIndex] + ": " + value));
+        point.addEventListener("pointerenter", event => showPoint(event, record, observation, field, seriesLabels[seriesIndex]));
+        point.addEventListener("pointermove", event => showPoint(event, record, observation, field, seriesLabels[seriesIndex]));
+        point.addEventListener("pointerleave", () => { tooltip.hidden = true; });
+        point.addEventListener("click", () => {
+          byId("inspect-run").value = index;
+          refreshSteps(observation.step);
+        });
+        svg.append(point);
+      });
+    });
+  });
+  if (!points) svg.append(svgElement("text", {x:294, y:125, "text-anchor":"middle", fill:"#536874", "font-size":13}, indices.length ? "No measurements for this panel" : "Select a run to inspect its trajectory"));
+}
+function render() {
+  const indices = [...selected].sort((a,b) => a-b);
+  const active = indices.map(i => records[i]);
+  const horizon = active.reduce((m,r) => Math.max(m,r.summary.observed_through || 0),0);
+  byId("run-count").textContent = active.length + " / " + records.length;
+  byId("observation-count").textContent = number(active.reduce((n,r) => n+r.observations.length,0));
+  byId("horizon").textContent = active.length ? number(horizon) : "—";
+  chart("target-chart", ["target_available","target_suppressed"], ["Training intervention removed","Diagnostic active"], indices, horizon);
+  chart("probe-chart", ["prerequisite_suppressed","prerequisite_available"], ["Diagnostic active","Computation available"], indices, horizon);
+  const body = byId("outcomes");
+  body.replaceChildren();
+  active.forEach(record => {
+    const result = record.summary, row = element("tr");
+    row.append(element("td",record.run_id));
+    const badge = statuses[result.status] || [result.status,"missing"], status = element("td");
+    status.append(element("span",badge[0],"badge "+badge[1]));
+    row.append(status);
+    ["observed_through","first_observed_acquisition","first_observed_loss_of_effectiveness","missing_checks"].forEach(key => row.append(element("td",number(result[key]))));
+    body.append(row);
+  });
+}
+function refreshSteps(preferred) {
+  const record = records[Number(byId("inspect-run").value)], select = byId("inspect-step");
+  select.replaceChildren();
+  record.observations.forEach((o, index) => {
+    const option = element("option","Update "+number(o.step));
+    option.value = index;
+    select.append(option);
+  });
+  const requested = record.observations.findIndex(o => o.step === preferred);
+  select.selectedIndex = requested >= 0 ? requested : record.observations.length-1;
+  select.disabled = !record.observations.length;
+  inspect();
+}
+function inspect() {
+  const record = records[Number(byId("inspect-run").value)], observation = record.observations[Number(byId("inspect-step").value)];
+  const measurements = byId("measurements");
+  measurements.replaceChildren();
+  [["Target · available","target_available"],["Target · diagnostic active","target_suppressed"],["Prerequisite · available","prerequisite_available"],["Prerequisite · diagnostic active","prerequisite_suppressed"]].forEach(([title,field]) => {
+    const box = element("div",null,"measurement");
+    box.append(element("span",title),element("strong",accuracy(observation ? observation[field] : null)));
+    measurements.append(box);
+  });
+  const context = byId("context");
+  context.replaceChildren();
+  const entries = [
+    ["Run",record.run_id],
+    ["Evaluation",record.metadata.evaluation || "Not specified in metadata"],
+    ["Training intervention",record.summary.training_intervention],
+    ["Diagnostic intervention",record.summary.diagnostic_intervention],
+    ["Probe criterion","Suppressed accuracy ≤ "+accuracy(record.criterion.maximum_suppressed)+" and drop ≥ "+(record.criterion.minimum_drop*100).toFixed(1)+" percentage points"],
+    ["Acquisition criterion","Available target accuracy ≥ "+accuracy(record.criterion.acquisition)]
+  ];
+  entries.forEach(([key,value]) => context.append(element("dt",key),element("dd",value)));
+  byId("metadata").textContent = JSON.stringify({criterion:record.criterion,metadata:record.metadata,observation:observation || null},null,2);
+}
+byId("inspect-run").addEventListener("change", () => refreshSteps());
+byId("inspect-step").addEventListener("change",inspect);
+byId("show-all").addEventListener("click", () => {
+  records.forEach((_,i) => selected.add(i));
+  document.querySelectorAll(".run-chip input").forEach(input => {input.checked=true;});
+  render();
+});
+byId("clear").addEventListener("click", () => {
+  selected.clear();
+  document.querySelectorAll(".run-chip input").forEach(input => {input.checked=false;});
+  tooltip.hidden = true;
+  render();
+});
+byId("download").addEventListener("click", () => {
+  const url = URL.createObjectURL(new Blob([JSON.stringify(records,null,2)],{type:"application/json"}));
+  const link = element("a");
+  link.href = url;
+  link.download = "intervention-records.json";
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+});
+render();
+refreshSteps();
+</script>
+</body>
+</html>

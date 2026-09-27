@@ -6,15 +6,15 @@ Code and evidence accompanying *When Data Can Teach: Prerequisite Circuits Gate
 Learning*, by **Kunwar Kalra and Thanush Patlolla**. Submitted to ICLR 2027;
 an arXiv link will be added when available.
 
-[Paper](paper/main.pdf) · [Reproduction](docs/reproduction.md) ·
-[Package guide](docs/package.md) · [Evidence](docs/evidence.md)
+[Paper](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/paper/main.pdf) · [Reproduction](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/reproduction.md) ·
+[Package guide](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/package.md) · [Evidence](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/evidence.md)
 
 The research studies how an existing computation changes what fixed future data
 can teach. Controlled removal/rescue experiments isolate this effect. Pretrained
 Pythia experiments test training-only head suppression and examine compensation
 over longer training. The demonstrated task family is induction and copying.
 
-![Controlled training-only suppression and activation rescue](docs/assets/removal-rescue.png)
+![Controlled training-only suppression and activation rescue](https://raw.githubusercontent.com/KunwarK13/Prerequisite_Circuits/main/docs/assets/removal-rescue.png)
 
 ## Start with the evidence
 
@@ -22,12 +22,13 @@ The package's reporting API uses only the Python standard library. From a clone:
 
 ```bash
 python -m pip install .
-prereq report results/reference/410m_circuit_tape38.json --html outputs/report.html
+prereq report results/reference/410m_*.json --html outputs/report.html --open
 ```
 
-This reads recorded observations; it does not train a model. For the paper's
+The interactive report works offline: compare runs, inspect exact observations,
+and export the embedded records. It reads saved evidence and does not train a model. For the paper's
 figures, raw-record verification, and experiment recipes, see
-[Reproduction](docs/reproduction.md).
+[Reproduction](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/reproduction.md).
 
 ## Run a small experiment
 
@@ -81,7 +82,7 @@ or turn temporal ordering into a causal mechanism.
 A candidate can be evaluated with removal, controls, and rescue. Automatic
 candidate discovery and validated mechanisms beyond induction are future research
 directions. New task/mechanism adapters can be added without changing the record
-format. See [Methods and scope](docs/methods.md).
+format. See [Methods and scope](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/methods.md).
 
 ## Repository
 
@@ -103,6 +104,9 @@ execution. No training or multi-GB download occurs on import or installation.
 
 ## Development
 
+See [Development and releases](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/development.md) for the public/private research
+workflow and publication steps.
+
 ```bash
 python -m pip install -e '.[dev,pythia]'
 python -m pytest
@@ -113,4 +117,4 @@ python -m build
 The scientific checks include channel/gradient scope, restoration cleanup,
 data-replay mismatches, observation neutrality, and independent reconstruction of
 GPT-NeoX head outputs. GPU experiments are opt-in. Original code is MIT licensed;
-third-party assets retain their own licenses. See [CITATION.cff](CITATION.cff).
+third-party assets retain their own licenses. See [CITATION.cff](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/CITATION.cff).

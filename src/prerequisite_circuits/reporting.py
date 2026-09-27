@@ -2,76 +2,26 @@
 
 from __future__ import annotations
 
-import html
 import json
 from collections.abc import Sequence
+from importlib.resources import files
 from pathlib import Path
 
 from .monitor import Trajectory
 
 
 def write_html(trajectories: Sequence[Trajectory], destination: str | Path) -> None:
-    rows = []
-    details = []
-    for trajectory in trajectories:
-        result = trajectory.summary()
-        values = [
-            trajectory.run_id,
-            result["status"],
-            result["observed_through"],
-            result["first_observed_acquisition"],
-            result["first_observed_loss_of_effectiveness"],
-            result["missing_checks"],
-        ]
-        rows.append(
-            "<tr>"
-            + "".join(
-                f"<td>{html.escape(str(v)) if v is not None else 'Not observed'}</td>"
-                for v in values
-            )
-            + "</tr>"
-        )
-        details.append(
-            "<details><summary>"
-            + html.escape(trajectory.run_id)
-            + ": criterion and context</summary><pre>"
-            + html.escape(
-                json.dumps(
-                    {
-                        "criterion": result["criterion"],
-                        "training_intervention": result["training_intervention"],
-                        "diagnostic_intervention": result["diagnostic_intervention"],
-                        "metadata": trajectory.metadata,
-                    },
-                    indent=2,
-                    allow_nan=False,
-                )
-            )
-            + "</pre></details>"
-        )
-    page = (
-        """<!doctype html><html lang="en"><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Intervention effectiveness</title>
-<style>body{font:16px system-ui;max-width:1100px;margin:3rem auto;padding:0 1rem;color:#192735}
-table{border-collapse:collapse;width:100%}td,th{text-align:left;padding:.8rem;border-bottom:1px solid #ddd}
-th{background:#eef3f6}p{line-height:1.6} .scroll,pre{overflow:auto}
-details{margin:1rem 0}summary{cursor:pointer}</style>
-<h1>Intervention effectiveness during learning</h1>
-<p>Each result uses its recorded probe criterion and observation grid. “Not observed”
-does not mean impossible. Effectiveness between observations is unmeasured.
-Temporal order alone does not establish that prerequisite recovery causes acquisition.</p>
-<div class="scroll"><table><thead><tr><th>Run</th><th>Probe criterion</th><th>Last update</th>
-<th>First acquisition</th><th>First loss of effectiveness</th><th>Missing checks</th>
-</tr></thead><tbody>"""
-        + "".join(rows)
-        + "</tbody></table></div>"
-        + "".join(details)
-        + "</html>"
-    )
+    """Write an offline report with embedded data; no remote scripts or services."""
+    if not trajectories:
+        raise ValueError("Supply at least one trajectory")
+    data = json.dumps([t.to_dict() for t in trajectories], allow_nan=False)
+    # JSON inside a script element must not contain an HTML closing tag.
+    data = data.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+    template = files("prerequisite_circuits").joinpath("report.html").read_text(encoding="utf-8")
+    page = template.replace("__TRAJECTORY_DATA__", data)
     path = Path(destination)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(page)
+    path.write_text(page, encoding="utf-8")
 
 
 def plot(trajectories: Sequence[Trajectory], destination: str | Path) -> None:
@@ -89,10 +39,9 @@ def plot(trajectories: Sequence[Trajectory], destination: str | Path) -> None:
             label = trajectory.metadata.get("label", trajectory.run_id)
             x = [o.step for o in observations]
             (line,) = axes[0].plot(x, [o.target_available for o in observations], label=label)
-            measured = [o for o in observations if o.prerequisite_suppressed is not None]
             axes[1].plot(
-                [o.step for o in measured],
-                [o.prerequisite_suppressed for o in measured],
+                x,
+                [o.prerequisite_suppressed for o in observations],
                 color=line.get_color(),
                 label=label,
             )

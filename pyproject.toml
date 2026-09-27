@@ -23,6 +23,7 @@ classifiers = [
 [project.optional-dependencies]
 train = ["torch>=2.5,<3", "numpy>=1.26,<3"]
 plot = ["matplotlib>=3.8,<4"]
+browser = ["playwright>=1.50,<2"]
 pythia = ["prerequisite-circuits[train]", "transformers>=4.45,<6"]
 dev = ["prerequisite-circuits[train,plot]", "pytest>=8,<10", "build>=1.2", "ruff>=0.11"]
 
@@ -30,15 +31,15 @@ dev = ["prerequisite-circuits[train,plot]", "pytest>=8,<10", "build>=1.2", "ruff
 prereq = "prerequisite_circuits.cli:main"
 
 [project.urls]
-Repository = "https://github.com/KunwarK13/prerequisite-circuits"
-Documentation = "https://github.com/KunwarK13/prerequisite-circuits/tree/main/docs"
-Issues = "https://github.com/KunwarK13/prerequisite-circuits/issues"
+Repository = "https://github.com/KunwarK13/Prerequisite_Circuits"
+Documentation = "https://github.com/KunwarK13/Prerequisite_Circuits/tree/main/docs"
+Issues = "https://github.com/KunwarK13/Prerequisite_Circuits/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-prerequisite_circuits = ["py.typed"]
+prerequisite_circuits = ["py.typed", "report.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

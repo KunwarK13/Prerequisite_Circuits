@@ -81,6 +81,18 @@ is the consumed prefix; too few batches or different bytes are errors.
 
 ## Reports
 
+```bash
+prereq report results/reference/410m_*.json --html outputs/report.html --open
+```
+
+The interactive report is one HTML file: open it locally, select runs, inspect
+points or exact observations, and download the embedded records. It works offline,
+including on mobile, with no server, account, or plotting dependency. Sharing the
+HTML shares all its data and metadata, including runs hidden in the current view.
+The exported JSON collection can be passed back to `prereq report`.
+
+![Offline trajectory report](assets/report.png)
+
 `Trajectory.save` writes schema-versioned JSON. `prereq report` recomputes its
 summary, ignoring any stored summary, and can export HTML or PDF/PNG/SVG plots.
 Acquisition is the first **observed** crossing of the declared target-accuracy

@@ -55,7 +55,7 @@
     }
   },
   "package_tests": {
-    "passed": 32,
+    "passed": 37,
     "failed": 0,
     "skipped": 0,
     "device": "CPU"
@@ -74,5 +74,13 @@
       "3.12"
     ],
     "cpu_pytorch_job": true
+  },
+  "browser": {
+    "engine": "Chrome via Playwright",
+    "desktop_and_mobile": true,
+    "export_roundtrip": true,
+    "missing_probe_gaps": true,
+    "unsafe_label_isolation": true,
+    "network_requests": false
   }
 }

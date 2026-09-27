@@ -97,6 +97,8 @@ class NeoXHeads:
         width = hidden // count
         grouped: dict[int, list[int]] = {}
         for layer, head in pairs:
+            if any(isinstance(i, bool) or not isinstance(i, int) for i in (layer, head)):
+                raise ValueError("Layer and head indices must be integers")
             if not 0 <= layer < len(model.gpt_neox.layers) or not 0 <= head < count:
                 raise ValueError("Head index outside model")
             grouped.setdefault(layer, []).extend(range(head * width, (head + 1) * width))

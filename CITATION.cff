@@ -9,5 +9,5 @@ authors:
     given-names: Thanush
 version: 0.1.0
 license: MIT
-repository-code: "https://github.com/KunwarK13/prerequisite-circuits"
+repository-code: "https://github.com/KunwarK13/Prerequisite_Circuits"
 abstract: "Tools and reference evidence for measuring whether interventions remain effective during learning."

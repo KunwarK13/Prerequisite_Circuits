@@ -12,7 +12,12 @@ from typing import Any
 
 
 def _probability(name: str, value: float | None) -> None:
-    if value is not None and (not math.isfinite(value) or not 0 <= value <= 1):
+    if value is not None and (
+        isinstance(value, bool)
+        or not isinstance(value, (int, float))
+        or not math.isfinite(value)
+        or not 0 <= value <= 1
+    ):
         raise ValueError(f"{name} must be a finite number in [0, 1]")
 
 
@@ -71,8 +76,10 @@ class Trajectory:
     observations: list[Observation] = field(default_factory=list)
 
     def __post_init__(self) -> None:
-        if not self.run_id:
-            raise ValueError("run_id cannot be empty")
+        if not isinstance(self.run_id, str) or not self.run_id.strip():
+            raise ValueError("run_id must be a nonempty string")
+        if not isinstance(self.metadata, dict):
+            raise ValueError("metadata must be a JSON object")
         existing, self.observations = self.observations, []
         for observation in existing:
             self.append(observation)
@@ -151,7 +158,13 @@ class Trajectory:
 
     @classmethod
     def load(cls, path: str | Path) -> Trajectory:
-        value = json.loads(Path(path).read_text())
+        return cls.from_dict(json.loads(Path(path).read_text(encoding="utf-8")))
+
+    @classmethod
+    def from_dict(cls, value: dict[str, Any]) -> Trajectory:
+        """Validate a record and recompute its summary from the observations."""
+        if not isinstance(value, dict):
+            raise ValueError("A trajectory must be a JSON object")
         if value.get("schema_version") != 1:
             raise ValueError("Unsupported trajectory schema")
         return cls(
