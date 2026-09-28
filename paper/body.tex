@@ -1,0 +1,586 @@
+\begin{abstract}
+The same training data can teach a capability to one model and nothing to
+another. Curricula and data attribution depend on this effect, but it is unclear
+which parts of a model decide what it can learn from given data. We test whether a
+circuit that the model learned earlier can be a prerequisite for learning a new
+task. We keep the training data fixed, suppress an induction circuit only while the
+model trains on a task that uses it, and evaluate every model with the circuit
+intact. In a two-layer transformer, suppressing the circuit's previous-token head
+during training prevents learning of long-range copying, and supplying the head's
+output restores it. Without the circuit, the model learns nothing from the same data
+in 600,000 updates. In pretrained Pythia models from 160M to 6.9B parameters,
+suppressing induction heads prevents or delays learning of a retrieval task that
+uses induction; suppressing control heads does not. With longer training, most
+pretrained models learn the task by building a new induction circuit from backup
+heads, which attend to the right tokens before training but do not copy them.
+Suppressing these heads after training removes the capability, and suppressing them
+from the start prevents learning at 410M for 2,000 updates. The delay, 2 to 18 times
+the learning time of the controls, depends on how many backup heads remain. Circuits
+that a model has already learned can therefore decide whether, and how quickly, it
+learns from later data.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Whether a batch of training data teaches a model something new depends on the
+model as well as on the data. Curricula, data selection and data attribution all
+rely on the fact that the value of an example changes during training
+\citep{bengio2009curriculum,chen2023skillit,mindermann2022prioritized,wang2025temporal,lee2026influence},
+but it is unclear which part of a model's state decides what the model can learn.
+We ask whether a specific learned computation can decide it. If a new capability is
+built from computations the model already has, then whether those computations are
+available should decide whether the model learns the capability from a given data
+stream. We call such computations \emph{prerequisite circuits}.
+
+Testing this idea requires separating two roles a circuit can play. A circuit may be
+needed to \emph{perform} a capability, which ablation at evaluation time measures,
+or to \emph{learn} it, which such ablation cannot reveal. We isolate the second role
+with \emph{training-only suppression}. We zero a circuit's output only on the
+training examples of the new task, keep the training batches and their order
+identical across conditions, and evaluate every model with the circuit intact
+(\figref{fig:rescue}A). Any difference in what the models learn then comes from
+whether the circuit was available during training.
+
+Earlier work has intervened on internal structure during training.
+\citet{chen2024sudden} suppress syntactic attention while masked language models
+train and find it necessary for later grammatical capabilities,
+\citet{singh2024needs} clamp parts of a transformer to find what induction heads
+need in order to form, and \citet{sahin2025hapax} suppress induction throughout
+pretraining. These interventions act on all training data, so they also change how
+the structure itself forms. We instead suppress a circuit that has already formed,
+only on the new task's examples and with the training data fixed.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.9\linewidth]{fig_rescue.pdf}
+\caption{\textbf{Suppressing the prerequisite during training blocks learning, and
+supplying its output restores it} (two-layer model). (A) Every condition starts
+from the same checkpoint, trains on the same 1,000 target-task batches and is
+evaluated with the original head enabled and nothing supplied. (B) Suppressing the
+previous-token head during training blocks learning; suppressing a control head
+does not. (C) With the head suppressed, supplying its intact output restores
+learning; supplying nothing or the control head's output does not. Thin lines:
+three original models; thick lines: means; dotted lines: the 1-nat criterion. Five
+further models replicate both results (\appref{app:newseeds}).}
+\label{fig:rescue}
+\end{figure}
+
+Our prerequisite is induction \citep{olsson2022induction}, in which a
+previous-token head and an induction head together predict the token that followed
+an earlier occurrence of the current token. Our target tasks build on it. In a
+two-layer transformer the target task is long-range copying. In pretrained Pythia
+models \citep{biderman2023pythia,vanderwal2025polypythias} it is a retrieval task in
+which the model must pass the retrieved token through a fixed mapping. We make three
+contributions.
+
+\begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
+\item \textbf{A test of whether learning needs a circuit} (\secref{sec:controlled}).
+In the two-layer model, suppressing the previous-token head during training prevents
+learning of long-range copying, and supplying the head's output restores it. Data
+that do not teach the task before the circuit forms do teach it when replayed
+afterwards. Without the circuit, the model learns nothing from the same data in
+600,000 updates.
+\item \textbf{The same dependence in a pretrained language model}
+(\secref{sec:pythia}). In Pythia-160M, suppressing four induction heads on the
+target-task examples prevents learning for 500 updates in all 16 public pretraining
+runs. Suppressing control heads does not, even when they harm language modeling at
+least as much.
+\item \textbf{Pretrained models rebuild the prerequisite} (\secref{sec:scaling}).
+From 160M to 6.9B parameters, most suppressed models learn the task with longer
+training, after 2 to 18 times as many updates as the controls. They turn backup
+heads, which attend to the right tokens before training but do not copy them, into
+a new induction circuit. Suppressing these heads removes the capability, fewer
+remaining backup heads mean a longer delay, and suppressing the new circuit while it
+forms prevents the model from learning to retrieve the answer.
+\end{itemize}
+
+Our results suggest that a model learns a capability quickly when the circuits it
+builds on are present. When they are missing, the model must first rebuild them from
+whatever parts it has (\secref{sec:discussion}). The two-layer model cannot rebuild
+its previous-token head within our training budgets, whereas pretrained models can
+rebuild their induction heads. This rebuilding resembles self-repair by backup heads
+\citep{wang2023ioi,mcgrath2023hydra,rushing2024selfrepair} and the relearning of
+removed capabilities \citep{lo2024relearn,jain2024mechanistically}. The delay fits
+theories in which learning time depends on how many steps must be learned together
+\citep{abbe2021staircase,abbe2023leap}.
+
+\section{Setup}
+\label{sec:setup}
+
+\paragraph{Prerequisite circuit.}
+In a sequence $\ldots A\,B \ldots A$, a first-layer \emph{previous-token head}
+writes information about $A$ into the position of $B$. A later \emph{induction head}
+attends from the second $A$ to that position and copies $B$
+\citep{olsson2022induction}. The previous-token step forms first
+\citep{singh2024needs,bietti2023birth,edelman2024evolution}, and the circuit forms
+early in pretraining \citep{olsson2022induction,tigges2024consistent}. By the
+prerequisite we mean this computation, whichever heads implement it. We call a
+head's attention from the repeated token to the token that followed its first
+occurrence the head's \emph{induction attention}.
+
+\paragraph{Two-layer model.}
+The two-layer model is an attention-only transformer (0.69M parameters, eight heads
+per layer, context 128) trained on bytes of enwik8, shuffled to keep bigram
+statistics but destroy longer-range structure. \emph{Short repeats} (16-byte spans
+copied 17--31 bytes later) form the induction circuit. The target task is
+\emph{long repeats} (32-byte spans copied 40--88 bytes later), which reward copying
+over a greater distance. We measure learning by \emph{copy gain}: how much lower the
+cross-entropy is on copied positions than on the same positions in unmodified text.
+A model learns the target task when copy gain reaches 1 nat within 10,000 updates.
+
+\paragraph{Pretrained models.}
+We fine-tune public Pythia checkpoints from early in pretraining. We use step 1000
+for 160M to 2.8B, where induction has formed, and step 2000 for 6.9B, because its
+step-1000 checkpoint falls below our minimum induction accuracy of 0.5. The order
+experiments start at step 512 of 160M, before induction forms.
+
+In the target task, \emph{mapped copy}, a four-token key is followed by one of 32
+reserved marker tokens, three distractor markers appear elsewhere, and the key
+repeats later. The model must output $\pi(m)$, where $m$ is the marker that followed
+the key and $\pi$ is a fixed random permutation, so the answer never appears in the
+context. Choosing the marker nearest the query scores about 60\% without reading the
+key, so we test directly whether the model uses the key. The \emph{key-swap test}
+exchanges the key with the tokens before a distractor marker, which changes the
+correct answer. The \emph{key-deletion test} replaces the key with unused tokens. We
+call a solution \emph{key-dependent} if it passes both tests.
+
+A model \emph{learns} the target task when accuracy reaches 0.8, it passes the
+key-swap test on 80\% of pairs and deleting the key lowers accuracy by 0.25 or more.
+The 16-run study in \secref{sec:pythia} instead uses an accuracy criterion of 0.5
+and runs the key tests at the end of training. Each training batch holds six
+mapped-copy examples, six ordinary induction examples and six windows of natural
+text.
+
+\paragraph{Interventions.}
+\emph{Training-only suppression} zeros the outputs of selected heads on target-task
+examples during training. We call the set of suppressed heads the \emph{mask}. In
+the pretrained models, the other examples in each batch pass through all heads, all
+parameters train and every evaluation removes the mask. In the two-layer model, the
+suppressed head and its inputs (embeddings, positions and first normalization) are
+frozen in every condition, so the restored head computes exactly the same function.
+To test whether the model needs the head's output, we suppress the head and add the
+output of an intact frozen copy on the same input. To test the order of training, we
+\emph{replay} the same target-task batches in the same order. \emph{Masked
+induction} is ordinary induction accuracy measured with the mask applied; it shows
+whether the model has rebuilt induction in other heads.
+
+\paragraph{Head selection and controls.}
+We never use target-task outcomes to select heads. In the pretrained models we rank
+heads by induction attention and suppress the smallest set that lowers held-out
+induction accuracy to 0.02 or less (0.2 in the 16-run study). \emph{Matched
+controls} are equally many heads in the same layers with the lowest induction
+attention. \appref{app:methods} gives details, and \appref{app:hygiene} states which
+choices we fixed before which outcomes.
+
+\section{Learning requires the prerequisite in a two-layer model}
+\label{sec:controlled}
+
+\paragraph{The circuit is needed during learning.}
+We start from three models in which the induction circuit has formed. We identify
+the circuit by ablating heads on a short-range copying probe, without reference to
+the target task. Ablating the selected heads together lowers short-range accuracy to
+0.02 or less; ablating equally many control heads leaves 0.72 or more. We then train
+each model for 1,000 updates on long repeats. With no suppression, or with a control
+head suppressed, the models learn the target task (copy gain 2.29--2.48 nats). With
+the previous-token head suppressed during training, copy gain stays between $-0.03$
+and $0.02$ nats (\figref{fig:rescue}B). The head and its inputs are frozen, so the
+restored head computes the same function at every evaluation. The conditions
+therefore differ only in whether the head's output was available during training.
+
+\paragraph{Supplying the head's output restores learning.}
+We keep the head suppressed but add the output of an intact frozen copy. This
+restores learning (copy gain 2.29--2.48 nats). Adding nothing, or adding the control
+head's output, leaves copy gain below 0.023 nats (\figref{fig:rescue}C). The
+supplied output reproduces the intact forward pass to within $2\times10^{-5}$ in the
+logits. Five further models, trained from scratch under the same rules, replicate
+both results (\appref{app:newseeds}).
+
+\paragraph{The same data teach after the circuit forms.}
+We compare two schedules with the same data. One trains on short repeats until the
+circuit forms and then on 90,000 target-task batches; the other presents the same
+batches first and the short repeats afterwards. After the circuit forms, the batches
+yield 2.4 nats or more of copy gain within 10,000 updates. Before it forms, they
+yield at most 0.02 nats after all 90,000. A model of the same age trained only on
+unmodified text also fails.
+
+We also replay the target-task batches after a first exposure. The first exposure
+fails in all three seeds. The circuit then forms in two of them, and in both the
+replayed batches teach the target task by the first evaluation at 500 updates. In
+the third seed the circuit does not form, and replay fails (\appref{app:controlled},
+\figref{fig:orders}). A four-layer transformer with MLP blocks shows the same effect
+of order (\appref{app:breadth}).
+
+\paragraph{Without the circuit, the model does not learn.}
+Models trained on the target task first stay below 0.03 nats of copy gain for
+600,000 updates, 1,200 times the budget that suffices with the circuit. So do models
+whose previous-token head we reset after the circuit forms (\appref{app:horizon}).
+
+The two parts of the circuit behave differently. Resetting the previous-token head
+(4.8\% of parameters) blocks learning for 90,000 updates in six of six models.
+Resetting the selected induction heads instead lets all six learn within 500
+updates. After a reset of the whole second layer and the readout, the models do not
+recover within 10,000 updates (\appref{app:resets}). In a third group of three
+models, the previous-token reset blocks learning in two. The third keeps a second
+head with previous-token attention of 0.98 (0.15 or less in every other model), and
+resetting that head as well blocks learning (\appref{app:retained}).
+
+In this model, then, the target-task data can rebuild the induction step but not
+the previous-token step. In the pretrained models we suppress the induction heads on
+target-task examples, so the models cannot rebuild induction in those heads;
+\secref{sec:scaling} shows that they rebuild it in other heads.
+
+\section{Learning requires the prerequisite in Pythia-160M}
+\label{sec:pythia}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_pythia.pdf}
+\caption{\textbf{Order, replay and training-only suppression in Pythia-160M.} Thin
+lines average the two data streams of one pretraining run; thick lines average runs
+(three in A and B, all 16 in C). (A) Target-task batches arrive after induction
+forms (blue) or before (orange). (B) First exposure and replay after induction
+forms. (C) Induction heads (orange) or matched control heads (blue) are suppressed
+on target-task examples only; every evaluation uses all heads. Dotted and dashed
+lines mark uniform guessing and the 0.5 criterion; the band marks the
+nearest-marker heuristic.}
+\label{fig:pythia}
+\end{figure}
+
+\paragraph{Order and replay.}
+At pretraining step 512, Pythia-160M cannot yet perform induction: it predicts
+none of the 256 repeated tokens on our induction probe. From this checkpoint we
+train on the same batches in two orders, in three pretraining runs with two data
+streams each. When the model first trains on natural text with synthetic repeats
+until induction forms (2,200--2,600 updates) and then on 500 target-task batches,
+target accuracy passes 0.5 within 100 updates and ends at 0.99 or above. When the
+model trains on the same 500 target-task batches first, accuracy stays at or below
+0.066. We then give this model the same induction training. It has now seen
+exactly the same batches as the first model, and induction has formed, yet its
+target accuracy is still zero. Replaying the 500 target-task batches then brings
+accuracy to 0.5 within 100 updates in all six cases (\figref{fig:pythia}A--B).
+
+\paragraph{Training-only suppression in 16 pretraining runs.}
+At step 1000 we select four induction heads and suppress them on the mapped-copy
+examples only. We use the three original runs and the 13 other public PolyPythias
+runs, which vary initialization, data order or both. Target accuracy never exceeds
+0.067 on either stream, while every matched control reaches 0.992 or more within 500
+updates (\figref{fig:pythia}C; 32 of 32 paired comparisons; one-sided sign test over
+runs, $p=2^{-16}$). The controls' solutions are key-dependent: they pass the key-swap
+test on 96--100\% of pairs, and deleting the key lowers their accuracy to 2--7\%
+(\appref{app:pythia}).
+
+\paragraph{Controls that harm language modeling as much still learn.}
+Low-attention heads also matter little for language modeling, so the controls might
+learn only because removing them does little damage. We therefore select
+\emph{loss-matched controls}. Among heads whose individual removal keeps induction at
+90\% of its intact accuracy or more, we add heads in order of how much their removal
+raises natural-text loss. We stop when the set raises the loss at least as much as
+the induction heads do. At 160M this takes 16 heads, which raise natural-text loss by
+0.43 nats (0.40 for the four induction heads) and leave induction at 0.66 (0.00).
+
+Under the protocol of \secref{sec:scaling}, suppressing these 16 heads does not slow
+learning: the model learns at updates 350 and 400, against 350 without suppression.
+The four induction heads delay learning to 6,300--6,400 updates. At 410M, with eight
+loss-matched heads suppressed, the model learns at updates 150 and 200, against 150
+without suppression (\appref{app:lossmatched}).
+
+\paragraph{What suppression removes.}
+Suppression also changes induction itself: suppressed models end with lower
+induction than the controls (0.22--0.49 against 0.74 or more). Blocking only the
+target-task gradient through the heads, while keeping their output, does not
+reliably prevent learning (\appref{app:gradientblock}). The model therefore needs the
+heads' output during training, not a gradient path through them.
+
+\section{Pretrained models rebuild the prerequisite from backup heads}
+\label{sec:scaling}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_scaling.pdf}
+\caption{\textbf{Pretrained models learn only after rebuilding the prerequisite.}
+(A) Target accuracy (solid; evaluated without the mask) and masked induction
+(dashed) for suppressed runs (orange) and controls (blue), two data streams per
+size; parentheses give the number of suppressed heads. The 2.8B controls come from
+the 500-update study, and 6.9B starts at pretraining step 2000. (B) Adaptive
+suppression at 410M. Adding heads to the mask whenever masked induction returns
+(pink) does not prevent learning. Adding heads whenever the model passes the key-swap
+test (green) keeps it from learning a key-dependent solution. Yoked (dotted) and
+static (dash-dot) controls with as many low-attention heads suppressed learn by
+update 150. (C) Mask size (number of suppressed heads) in the adaptive runs. (D) After training,
+suppressing the top rebuilt heads (orange) removes masked induction (dashed) and
+target accuracy (solid) at 410M (circles) and 1B (squares); suppressing
+low-attention heads in the same layers (blue) does not.}
+\label{fig:scaling}
+\end{figure}
+
+We repeat training-only suppression at 160M to 6.9B with new data streams, longer
+training and a learning rate of $3\times10^{-5}$. We chose this rate on control runs
+only, because $10^{-4}$ made control learning unstable at 410M and 1B. At each size
+we suppress the smallest set of induction heads, from a coarse grid, that lowers
+held-out induction to 0.02 or less (4, 8, 8, 7, 4 and 24 heads). Controls learn
+within 100--350 updates at every size. Architecture, head width and checkpoint age
+differ across sizes (\appref{app:scaling}), so we treat each size as a separate case
+and fit no trend. We did not train 12B, whose step-1000 checkpoint falls below our
+induction threshold.
+
+\begin{table}[t]
+\centering\small
+\caption{\textbf{Training-only suppression across model sizes.} \emph{First learned}
+is the first evaluation (every 50 updates) that meets the learning criterion, for
+data stream 1 / 2. Masked induction is given at the start and end of training.}
+\label{tab:scaling}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Model & Heads & Updates & \multicolumn{2}{c}{First learned} & Delay & Masked induction \\
+\cmidrule(lr){4-5}
+ & suppressed & observed & controls & suppressed & & start $\to$ end \\
+\midrule
+160M & 4 & 10,000 & 350 & 6,400 / 6,300 & 18$\times$ & 0.00 $\to$ 0.90 \\
+410M & 8 & 2,000 & 150 & 900 / 900 & 6$\times$ & 0.01 $\to$ 0.82--0.88 \\
+1B & 8 & 2,000 & 150--200 & 1,200 / 1,400 & 6--9$\times$ & 0.00 $\to$ 0.89--0.96 \\
+1.4B & 7 & 500 & 150 & partial$^\dagger$ & --- & 0.01 $\to$ 0.01 \\
+2.8B & 4 & 2,000 & 150--200$^\ddagger$ & 900 / 900 & $\approx$5$\times$ & 0.01 $\to$ 0.92--0.93 \\
+6.9B$^\ast$ & 24 & 500 & 100 & 200 / 250 & 2--2.5$\times$ & 0.00 $\to$ 0.88--0.92 \\
+410M$^\S$ & 8, 4, 4 & 2,000 & 150--200 & 900 / 900; never$^{\times 4}$ & 6$\times$; --- & 0.00 $\to$ 0.82, 0.00 \\
+\bottomrule
+\end{tabular}\\[2pt]
+\raggedright\footnotesize $^\ast$Pretraining step 2000; not comparable to the step-1000 rows. $^\dagger$Target accuracy 0.20 and 0.14 at 500 updates, failing the key tests. $^\ddagger$Controls from the 500-update study on other data streams. $^\S$Three independent pretraining runs (run 1; runs 2 and 3); controls from their 500-update study.
+\end{table}
+
+\paragraph{Learning is delayed.}
+At 500 updates, the length of the 16-run study, suppression prevents learning at
+160M, 410M, 1B and 2.8B and in three independent 410M pretraining runs. With longer
+training, the suppressed models learn the target task at every size except 1.4B,
+which we train for only 500 updates (\figref{fig:scaling}A; Table~\ref{tab:scaling}).
+410M and 1B learn after 900--1,400 updates, 6--9 times as long as the controls. 2.8B
+learns after 900 updates. 160M makes no progress for 3,500 updates and learns after
+6,300--6,400, 18 times as long as the controls. Of the three independent 410M runs,
+one learns at update 900 and two do not learn within 2,000 updates.
+
+\paragraph{The models learn the task before they recover induction.}
+Masked induction also recovers, from 0.00 to above 0.8, but only after the target
+task. With the mask applied, target accuracy rises before masked induction at 160M,
+410M, 1B and 2.8B. At 410M, target accuracy with the mask applied is 0.62 at update
+650, while masked induction is 0.004. At 1B it is 0.59--0.63 while masked induction
+is zero. Only at 6.9B do the two rise together. The mask applies only to target-task
+examples, so only these examples give the models a reason to rebuild induction
+outside the suppressed heads. The models first build a retrieval circuit for the
+target task itself. Four observations show that this circuit rebuilds the
+prerequisite from backup heads.
+
+\paragraph{(a) The target task depends on the rebuilt heads.}
+After training, we rank the unsuppressed heads of each model that learned by
+induction attention, with the mask applied, and also suppress the top $k$
+(\figref{fig:scaling}D). At 410M, suppressing the top four removes held-out
+induction (0.84--0.87 to 0.00) and lowers target accuracy from 1.00 to 0.26--0.38;
+suppressing eight lowers it to 0.05--0.06. At 1B, four heads lower target accuracy
+to 0.25--0.46 and eight to 0.01--0.02. Suppressing equally many low-attention heads
+in the same layers changes neither measure. At 6.9B, eleven or twelve more heads
+lower induction to 0.01--0.02 and target accuracy to 0.28--0.32
+(\appref{app:scaling}).
+
+\paragraph{(b) The rebuilt heads are backup heads.}
+In the pretrained 410M and 1B models, these heads rank 9th to 13th by induction
+attention, just below the suppressed heads. Before training they already attend from
+the repeated key to its source (induction attention 0.11--0.67 with the mask
+applied, against a median of 0.01), yet masked induction is 0.00. We call such heads
+\emph{backup heads}. Their attention grows during training in every condition,
+including the controls. Only suppressed training, however, makes their outputs copy:
+masked induction reaches 0.84--0.94 after suppressed training and stays at 0.00
+after control or unsuppressed training (\appref{app:regrowth}). The models thus
+rebuild the prerequisite from backup heads that were present but unused, much as
+backup heads take over from ablated heads at inference
+\citep{wang2023ioi,gong2026coax}.
+
+\paragraph{(c) The delay depends on how many backup heads remain.}
+If learning waits for backup heads to be repurposed, leaving more of them
+unsuppressed should shorten the delay, and suppressing all of them should prevent
+learning. We find both effects. At 160M, suppressing only the top two induction
+heads still meets our selection criterion (held-out induction 0.012) but leaves three
+heads with induction attention above 0.3. The model then learns by update
+1,100--1,300. With three heads suppressed it does not learn within 2,000 updates, and
+with four it needs 6,300--6,400. At 410M, four suppressed heads permit learning
+within 500 updates and eight delay it to 900. At 1B, the same numbers give learning
+within 500 updates and at 1,200--1,400.
+
+Conversely, we suppress at 410M every head with induction attention of 0.2 or more
+in the pretrained model (13 heads, fixed before training). Target accuracy then stays
+at or below 0.012 for all 2,000 updates, while unsuppressed induction and
+natural-text loss stay at the levels of the other runs. Suppressing 13 low-attention
+heads in the same layers does not slow learning (update 150, as without
+suppression). The number of backup heads with induction attention of 0.2 or more
+also separates the three independent 410M runs. Run 1 has eight and learns at update
+900; runs 2 and 3 have three each and do not learn. We counted the heads of run 3
+before training it. Across sizes, the count orders the delays only roughly
+(\appref{app:regrowth}).
+
+\paragraph{(d) Suppressing the rebuilt circuit as it forms prevents learning.}
+Two adaptive procedures at 410M test whether the models must rebuild the circuit to
+learn. Every 50 updates, each procedure computes a score with the mask applied. If
+the score exceeds a threshold, the procedure adds to the mask the unsuppressed heads
+with the highest attention from the query to the source, until the score falls below
+the threshold.
+
+When the score is masked induction (threshold 0.02), the mask grows to 14 and 16
+heads and masked induction never exceeds 0.04. The model still learns the target
+task, at updates 950 and 1,150 (\figref{fig:scaling}B--C), so suppressing general
+induction does not stop the circuit that the model builds for the task. When the
+score is the key-swap pass rate on held-out target-task examples (threshold 0.10),
+the mask grows to 18 and 16 heads. The model then does not learn the task within
+2,000 updates (key-swap accuracy at most 0.23 and 0.09). Target accuracy still rises
+to 0.41 and 0.28, but the solution is not key-dependent.
+
+Two controls rule out an effect of suppressing more heads. A yoked control adds
+equally many low-attention heads in the same layers at the same updates. A static
+control suppresses, from the start, as many low-attention heads as the adaptive runs
+end with (22 and 16). Both learn by update 150.
+
+\paragraph{When the circuit cannot be rebuilt in place.}
+To test what happens when the layers with the suppressed heads cannot change, we
+freeze the embeddings and the lower eight of 16 layers of a 1B model, which contain
+the suppressed heads, and suppress those heads on target-task examples
+(\appref{app:prefix}). If we instead supply their exact outputs during training, the
+model learns as fast as without suppression (at update 300). With the heads
+suppressed, learning takes nine times as long (2,750--2,800 updates). The model
+learns a key-dependent workaround in its upper layers that works only while the
+heads are suppressed: 98\% target accuracy with suppression and 2--4\% without.
+Masked induction stays at or below 2/256 throughout, so the workaround does not
+perform ordinary induction on our probe, although it may use computations the probe
+does not measure.
+
+A stronger intervention removes attention to the earlier key occurrence in every
+head. It prevents learning for 2,000 updates at 160M to 1.4B, but it also removes
+information the task needs, so we report it only in \appref{app:edges}.
+
+\section{Why a missing prerequisite delays learning}
+\label{sec:discussion}
+
+We propose one account of both the block in the two-layer model and the delay in
+pretrained models. Suppose a target task combines an existing computation with
+something new. When the computation is present, the gradient from target-task
+examples only has to build the new part, so the model learns quickly. When the
+computation is missing, the data must first build a replacement, which is a harder
+learning problem. This account resembles theories in which learning time depends on
+the largest \emph{leap}, the number of features that must be learned together
+\citep{abbe2021staircase,abbe2023leap}, and results showing that intermediate steps
+make otherwise unlearnable tasks learnable \citep{wies2023subtask}. The two-layer
+model shows where the difficulty lies. It rebuilds a missing induction step within
+500 updates but not a missing previous-token step in 600,000, unless a second
+previous-token head survives.
+
+Pretrained models also need the prerequisite, but they obtain it differently. At
+410M and 1B, training on the target task turns backup heads that already attend to
+the right tokens into induction heads. Leaving more of them unsuppressed shortens
+the delay. Suppressing all of them, or suppressing the rebuilt circuit as it forms,
+prevents the model from learning a key-dependent solution. This agrees with
+self-repair at inference, where other heads or layers partly compensate for ablated
+ones \citep{mcgrath2023hydra,rushing2024selfrepair,mcdougall2024copy}, including
+otherwise unused backup heads \citep{wang2023ioi,gong2026coax}. It also agrees with
+the way circuit roles move between heads during Pythia pretraining
+\citep{tigges2024consistent}.
+
+Relearning after removal follows a similar pattern. Pruned concept neurons are
+rebuilt elsewhere \citep{lo2024relearn}, unlearned knowledge returns after brief
+fine-tuning
+\citep{deeb2024unlearning,hu2025jogging,lucki2025adversarial,jain2024mechanistically},
+and a 160M model whose induction heads are repeatedly reinitialized grows new ones
+\citep{sahin2025hapax}. Our results add that the remaining backup heads decide
+whether, and how quickly, the model can learn a new capability that depends on the
+removed computation. They also show that the model rebuilds the circuit for the new
+task before it recovers the general computation.
+
+It remains open why backup heads can be repurposed. The question mirrors a debate
+about why overparameterized networks train well \citep{martinelli2026escape}. On a
+lottery-ticket view, training amplifies structure that is already present
+\citep{frankle2019lottery}; here that structure is a pretrained head with the right
+attention pattern. On an escape-dimension view, extra units turn the plateaus of a smaller network into saddles that gradient descent can leave \citep{fukumizu2000local,simsek2021geometry}.
+Our data favor the first view in a narrow form, because we can identify the rebuilt
+heads before training. They do not rule out the second: we do not measure the loss
+landscape, and in Pythia model size is confounded with architecture and checkpoint
+age.
+
+\paragraph{Implications.}
+If whether a model learns from data depends on a specific circuit, curricula and
+data attribution may benefit from taking the model's circuits into account
+\citep{chen2023skillit,lee2026influence,chen2026mda}. Suppressing a capability's
+prerequisite is a weak safeguard in pretrained models, because they rebuild it from
+spare heads; unlearning and safety fine-tuning are fragile in a similar way
+\citep{qi2024finetuning,lee2024mechanistic,che2025tampering,tamirisa2025tamper}.
+Finally, a claim that a computation is necessary for learning should state the
+training length, because suppression that prevents learning for 500 updates may only
+delay it. A probe of the general prerequisite can also miss a circuit that the model
+rebuilds for the target task alone.
+
+\section{Related work}
+\label{sec:related}
+
+\paragraph{Internal structure and later learning.}
+Several studies manipulate internal structure during training and observe later
+capabilities. \citet{chen2024sudden} suppress syntactic attention in masked language
+models and find it necessary for later grammatical capabilities;
+\citet{singh2024needs} clamp subcircuits to identify the sub-computations that
+induction formation requires; \citet{zucchet2025facts} supply attention patterns to
+bypass a plateau in factual learning; and \citet{feng2025extractive} identify
+pretrained structures that let later facts generalize. Pretraining data and
+curricula shape which circuits form and how selectively fine-tuning acts
+\citep{bruijns2026curricula,chen2026mda,hu2025circuits}, and fine-tuning often
+strengthens existing mechanisms \citep{prakash2024finetuning,jain2024mechanistically}.
+Ablating a few induction heads in pretrained models sharply impairs pattern-matching
+in-context learning \citep{crosbie2025induction}, and \citet{sahin2025hapax} suppress
+induction throughout pretraining and find that abstractive in-context learning
+survives. Unlike these studies, we start from a circuit the model has already
+learned and keep the later training data fixed. We combine training-only
+suppression, supplying the suppressed output and replay, evaluate every model
+intact, and follow the effect across model sizes and training lengths.
+
+\paragraph{Training history, data influence and interventions.}
+Influence functions, data valuation and attribution methods quantify how examples
+affect a trained model \citep{koh2017understanding,ghorbani2019data,ilyas2022datamodels,park2023trak},
+and recent methods track how influence changes during training
+\citep{wang2025temporal,lee2026influence,bae2024source}. Critical periods,
+warm-starting and plasticity loss show that training history constrains later
+learning \citep{achille2019critical,kleinman2024critical,ash2020warm,dohare2024loss,lyle2023plasticity},
+and stagewise development provides internal milestones for such effects
+\citep{hoogland2025degeneracy,singh2023transient,reddy2024mechanistic,chan2022data}.
+Conclusions from ablation and activation patching depend on the method and metric
+\citep{zhang2024patching,heimersheim2024patching,li2024optimal,miller2024faithfulness},
+and different-looking circuits can implement the same mechanism
+\citep{bayatmakou2026many}. Gradient routing localizes what is learned with
+data-dependent gradient masks \citep{cloud2024gradient}; we instead suppress the
+forward computation on selected examples while the rest of each batch trains
+normally.
+
+\section{Limitations and future work}
+\label{sec:limits}
+
+We study one prerequisite, induction, with two copy-based target tasks. The data of
+the two-layer model are engineered, and the target task for the pretrained models is
+synthetic. We fine-tune early Pythia checkpoints rather than intervene during
+pretraining. Architecture, head width, the number of suppressed heads and checkpoint
+age vary with model size, and above 160M we mostly have one pretraining run per
+size, so we claim no scaling law. Suppressing a head removes everything it computes,
+so specificity to induction rests on our controls. Our results depend on the
+optimizer, learning rate and training length, and failing the learning criterion
+does not imply learning nothing. \appref{app:future} describes further experiments.
+
+\section*{Reproducibility Statement}
+Code, experiment configurations, recorded results, and reproduction
+instructions are available at
+\url{https://github.com/KunwarK13/Prerequisite_Circuits}.
+The appendices detail the protocols and per-run results. Matched conditions
+use deterministic training streams with verified batch counts and digests.
+Pretrained-model experiments start from public Pythia checkpoints.
+
+\section*{AI Use Statement}
+We used a language-model assistant for literature retrieval and
+discovery, manuscript drafting and editing, synthetic-data generation
+code, and assistance with research methodology, implementation,
+and interpretation of experimental results. All AI-assisted outputs, code, and analyses were reviewed and verified by the authors. The authors take
+responsibility for the final manuscript and all reported results.
+
+\input{refs}
+
+\appendix
+\input{appendix}

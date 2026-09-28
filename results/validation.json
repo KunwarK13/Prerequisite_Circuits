@@ -83,5 +83,22 @@
     "missing_probe_gaps": true,
     "unsafe_label_isolation": true,
     "network_requests": false
+  },
+  "paper_build": {
+    "source_archive": "When_Data_Can_Teach__Prerequisite_Circuits_Gate_Learning__2_.zip",
+    "checked_on": "2026-09-28",
+    "engine": "pdfTeX 1.40.25 (TeX Live 2023)",
+    "pages": 30,
+    "undefined_references_or_citations": 0,
+    "overfull_boxes": 0,
+    "all_fonts_embedded": true,
+    "figure_files_unchanged": 6,
+    "generated_tables_match_export": 6,
+    "publication_patches_verified": 4
+  },
+  "analysis_cleanup": {
+    "table_criterion_shared": true,
+    "generated_tex_files_byte_identical": 6,
+    "generated_json_summary_byte_identical": true
   }
 }

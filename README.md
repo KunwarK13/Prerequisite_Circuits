@@ -96,7 +96,7 @@ format. See [Methods and scope](https://github.com/KunwarK13/Prerequisite_Circui
 | `results/` | Compact reference trajectories and artifact manifests |
 | `examples/` | Small working examples |
 | `tests/` | Software and intervention-semantics tests |
-| `paper/` | Current supplied manuscript; authors maintain the Overleaf source |
+| `paper/` | Preprint PDF, complete LaTeX source, figures, and generated tables |
 | `docs/` | Reproduction, package usage, methods, and evidence index |
 
 Original execution sources and larger records are separate, checksum-verified

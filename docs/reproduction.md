@@ -30,7 +30,22 @@ The input download is about 27 MiB (about 276 MiB extracted). Each source file i
 verified before analysis. Outputs go to `outputs/figures/` and `outputs/tables/`.
 No GPU, model weights, or corpus downloads are needed. The command includes the
 controlled figures, Pythia figures, larger-model figure, and later appendix
-tables. It does not overwrite the supplied manuscript PDF.
+tables. It does not overwrite the manuscript's figures or PDF.
+
+### Build the current paper
+
+The complete Overleaf source is in `paper/`, including the figures and generated
+table rows. With a standard TeX Live installation (including `texlive-latex-extra`
+and `texlive-fonts-recommended` on Debian/Ubuntu), run:
+
+```bash
+python -m analysis.reproduce paper
+```
+
+The PDF is written to `outputs/paper/main.pdf`; the checked-in `paper/main.pdf`
+remains the release reference. No data download or Python plotting dependencies
+are needed. The bibliography is embedded in `refs.tex`, so BibTeX is not required.
+In Overleaf, upload the contents of `paper/` and select `main.tex` with pdfLaTeX.
 
 ## 3. Audit the historical controlled/160M release
 
@@ -55,8 +70,8 @@ provided; this is reported explicitly. Large pretrained endpoint weights are not
 included. The saved-prediction audits must not be described as new weight audits.
 
 The earlier `reproduce.py paper` command rebuilds the **September 20 reference
-manuscript**, not the later submitted PDF. Use the public analysis commands above
-for the selected later figures. Authors will add final Overleaf sources separately.
+manuscript**, not the current preprint. Use `python -m analysis.reproduce paper`
+for the current source and the figure/table commands above for the later analyses.
 
 ## 4. Run a new controlled replication
 

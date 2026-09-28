@@ -50,9 +50,12 @@ also matched `circuit` and duplicated those curves in the control collection. Th
 numerical records are unchanged. This is an analysis correction, not a new run.
 
 Other figure transformations preserve the original numerical operations. The
-supplied manuscript PDF is copied verbatim. The authors will add the final
-Overleaf sources; this release does not claim to reconstruct that PDF's precise
-typesetting from an earlier source snapshot.
+current preprint is built from the authors' September 28 Overleaf export. The
+publication edits add author affiliations, a neutral preprint header, PDF
+metadata, and the code-availability statement. Scientific text, figures, and
+table rows are preserved from that export. `paper/provenance.json` identifies
+the source archive and PDF; `results/manifest.json` covers the complete paper
+source as well as the reference records.
 
 ## Checkpoints and external data
 

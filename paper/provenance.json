@@ -1,5 +1,23 @@
 {
-  "sha256": "543156185eb2e775336ac0b270bf8f976f875d74acd2e410ca3630d848f9a2fd",
-  "description": "Latest manuscript PDF supplied by the authors in this session. Not independently retrieved from OpenReview. Final Overleaf source will be added by the authors.",
-  "modified": false
+  "source_archive": "When_Data_Can_Teach__Prerequisite_Circuits_Gate_Learning__2_.zip",
+  "source_archive_sha256": "ea7713df683668435d8840aa815cad250b2d349832b346b72e9220ce5d7bef93",
+  "source_received": "2026-09-28",
+  "description": "Preprint built from the authors' final Overleaf export with publication metadata and code-availability edits.",
+  "modified_files": [
+    "main.tex",
+    "body.tex"
+  ],
+  "changes": [
+    "Author names and affiliations",
+    "Neutral preprint header",
+    "PDF title and author metadata",
+    "Reproducibility statement linking the accompanying code and evidence"
+  ],
+  "scientific_content_changed": false,
+  "figures_and_generated_tables_unchanged": true,
+  "ai_disclosure_unchanged": true,
+  "sha256": "efd74d281e386ce6ff9e2faa895db7d069d1e29495b555de85a72d790d56fd5b",
+  "build_command": "python -m analysis.reproduce paper",
+  "engine": "pdfTeX 1.40.25 (TeX Live 2023)",
+  "pages": 30
 }

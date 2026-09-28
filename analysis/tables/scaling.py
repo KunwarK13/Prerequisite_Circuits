@@ -1,6 +1,5 @@
 """Generate LaTeX tables for the new analyses directly from raw JSON records."""
 
-import glob
 import json
 from pathlib import Path
 
@@ -9,11 +8,23 @@ import numpy as np
 REPO = Path(__file__).resolve().parents[2] / "artifacts/paper-inputs/scaling"
 R = REPO / "results/extensions/pythia_scaling/followup-v2-rebuild-evidence-v1/runs/scaling"
 OUT = Path(__file__).resolve().parents[2] / "outputs/tables"
-OUT.mkdir(parents=True, exist_ok=True)
 
 
 def fmt(x, d=2):
     return f"{x:.{d}f}"
+
+
+def first_acquisition(records):
+    """First observed update satisfying all three target-learning criteria."""
+    for record in records:
+        keys = record["primary_keys"]
+        if (
+            record["mc_acc"] >= 0.8
+            and keys["pair_both_correct"] >= 0.8
+            and record["mc_acc"] - keys["broken"]["accuracy"] >= 0.25
+        ):
+            return record["step"]
+    return None
 
 
 def regrowth_tables():
@@ -22,7 +33,7 @@ def regrowth_tables():
         f = R / f"regrowth_heads_v1/regrowth_{size}.json"
         if not f.exists():
             continue
-        d = json.load(open(f))
+        d = json.loads(f.read_text())
         orig = {tuple(h) for h in d["original"]}
         intact = np.array(d["states"]["initial"]["intact_attention"])
         forced0 = np.array(d["states"]["initial"]["forced_attention"])
@@ -60,7 +71,7 @@ def capacity_table():
     f = R / "regrowth_heads_v1/capacity.json"
     if not f.exists():
         return
-    d = json.load(open(f))
+    d = json.loads(f.read_text())
     rows = []
     for size, label in (
         ("160m", "160M"),
@@ -85,7 +96,7 @@ def capacity_table():
         )
     rep = R / "regrowth_heads_v1/capacity_410m_replicates.json"
     if rep.exists():
-        c = json.load(open(rep))
+        c = json.loads(rep.read_text())
         for s in (1, 2, 3):
             r = c[f"410m-seed{s}"]
             rows.append(
@@ -96,25 +107,14 @@ def capacity_table():
 
 
 def adaptive_summary():
-    def first_acq(recs):
-        for r in recs:
-            k = r["primary_keys"]
-            if (
-                r["mc_acc"] >= 0.8
-                and k["pair_both_correct"] >= 0.8
-                and r["mc_acc"] - k["broken"]["accuracy"] >= 0.25
-            ):
-                return r["step"]
-        return None
-
     out = {}
-    for p in sorted(glob.glob(str(R / "adaptive_suppression_v1/*.json"))):
-        d = json.load(open(p))
+    for p in sorted((R / "adaptive_suppression_v1").glob("*.json")):
+        d = json.loads(p.read_text())
         recs = d["records"]
         name = Path(p).stem
         last = recs[-1]
         out[name] = {
-            "first_acquired": first_acq(recs),
+            "first_acquired": first_acquisition(recs),
             "final_heads": len(d["final_heads"]),
             "additions": [(a["step"], a["n_heads"]) for a in d["additions"]],
             "end_target": last["mc_acc"],
@@ -128,29 +128,10 @@ def adaptive_summary():
             "max_target": max(r["mc_acc"] for r in recs),
         }
     (OUT / "adaptive_summary.json").write_text(json.dumps(out, indent=1))
-    for k, v in out.items():
-        print(k, v)
-
-
-if __name__ == "__main__":
-    regrowth_tables()
-    capacity_table()
-    adaptive_summary()
 
 
 def run_summary_table():
     """One row per new run, all computed from raw records with the paper's criterion."""
-
-    def first_acq(recs):
-        for r in recs:
-            k = r["primary_keys"]
-            if (
-                r["mc_acc"] >= 0.8
-                and k["pair_both_correct"] >= 0.8
-                and r["mc_acc"] - k["broken"]["accuracy"] >= 0.25
-            ):
-                return r["step"]
-        return None
 
     groups = [
         ("160M, 4 heads, 10,000 updates", "160m_tape{t}_circuit_trace10k"),
@@ -174,12 +155,12 @@ def run_summary_table():
             if not f.exists():
                 cells.append(None)
                 continue
-            d = json.load(open(f))
+            d = json.loads(f.read_text())
             recs = d["records"]
             last = recs[-1]
             cells.append(
                 {
-                    "first": first_acq(recs),
+                    "first": first_acquisition(recs),
                     "target": last["mc_acc"],
                     "pair": last["primary_keys"]["pair_both_correct"],
                     "masked": last["forced_current"]["ind"]["accuracy"],
@@ -207,17 +188,6 @@ def run_summary_table():
 
 
 def replicate_table():
-    def first_acq(recs):
-        for r in recs:
-            k = r["primary_keys"]
-            if (
-                r["mc_acc"] >= 0.8
-                and k["pair_both_correct"] >= 0.8
-                and r["mc_acc"] - k["broken"]["accuracy"] >= 0.25
-            ):
-                return r["step"]
-        return None
-
     rows = []
     for s in (1, 2, 3):
         cells = []
@@ -226,14 +196,14 @@ def replicate_table():
             if not f.exists():
                 cells.append(None)
                 continue
-            d = json.load(open(f))
+            d = json.loads(f.read_text())
             recs = d["records"]
             fm = next(
                 (r["step"] for r in recs if r["forced_original"]["ind"]["accuracy"] > 0.2), None
             )
             cells.append(
                 (
-                    first_acq(recs),
+                    first_acquisition(recs),
                     recs[-1]["mc_acc"],
                     recs[-1]["forced_original"]["ind"]["accuracy"],
                     fm,
@@ -255,11 +225,6 @@ def replicate_table():
     (OUT / "tab_replicates.tex").write_text("\n".join(rows) + "\n")
 
 
-if __name__ == "__main__":
-    run_summary_table()
-    replicate_table()
-
-
 def newseed_table():
     f = (
         REPO
@@ -267,7 +232,7 @@ def newseed_table():
     )
     if not f.exists():
         return
-    d = json.load(open(f))
+    d = json.loads(f.read_text())
     rows = []
     for r in d["new_seed_summary"]:
 
@@ -283,4 +248,10 @@ def newseed_table():
 
 
 if __name__ == "__main__":
+    OUT.mkdir(parents=True, exist_ok=True)
+    regrowth_tables()
+    capacity_table()
+    adaptive_summary()
+    run_summary_table()
+    replicate_table()
     newseed_table()
