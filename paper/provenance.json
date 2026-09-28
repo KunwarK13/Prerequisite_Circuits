@@ -8,7 +8,7 @@
     "body.tex"
   ],
   "changes": [
-    "Author names and affiliations",
+    "Author names, affiliations, and email addresses",
     "Neutral preprint header",
     "PDF title and author metadata",
     "Reproducibility statement linking the accompanying code and evidence"
@@ -16,7 +16,7 @@
   "scientific_content_changed": false,
   "figures_and_generated_tables_unchanged": true,
   "ai_disclosure_unchanged": true,
-  "sha256": "efd74d281e386ce6ff9e2faa895db7d069d1e29495b555de85a72d790d56fd5b",
+  "sha256": "b51bbd372370b29b296f270f4a6a30b02760158adea0b2bc0eaf2f6bafbca49b",
   "build_command": "python -m analysis.reproduce paper",
   "engine": "pdfTeX 1.40.25 (TeX Live 2023)",
   "pages": 30
