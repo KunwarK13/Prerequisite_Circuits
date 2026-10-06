@@ -9,7 +9,7 @@ Learning*, by **[Kunwar Kalra](https://github.com/KunwarK13)** and
 **[Thanush Patlolla](https://github.com/thanushpatlolla)**. Submitted to ICLR 2027;
 an arXiv link will be added when available.
 
-[Paper](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/paper/main.pdf) · [Reproduction](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/reproduction.md) ·
+[PyPI](https://pypi.org/project/prerequisite-circuits/) · [Paper](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/paper/main.pdf) · [Reproduction](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/reproduction.md) ·
 [Package guide](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/package.md) · [Evidence](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/evidence.md)
 
 The research studies how an existing computation changes what fixed future data
@@ -21,10 +21,19 @@ over longer training. The demonstrated task family is induction and copying.
 
 ## Start with the evidence
 
-The package's reporting API uses only the Python standard library. From a clone:
+Install from PyPI (Python 3.10 or newer). The reporting API uses only the Python
+standard library:
 
 ```bash
-python -m pip install .
+python -m pip install prerequisite-circuits
+prereq --version
+```
+
+For the bundled reference records, clone this repository and run from its root:
+
+```bash
+git clone https://github.com/KunwarK13/Prerequisite_Circuits.git
+cd Prerequisite_Circuits
 prereq report results/reference/410m_*.json --html outputs/report.html --open
 ```
 
@@ -36,7 +45,7 @@ figures, raw-record verification, and experiment recipes, see
 ## Run a small experiment
 
 ```bash
-python -m pip install '.[train,plot]'
+python -m pip install 'prerequisite-circuits[train,plot]'
 OMP_NUM_THREADS=1 prereq demo --output outputs/demo
 prereq report outputs/demo/*.json --plot outputs/demo/learning.pdf
 ```

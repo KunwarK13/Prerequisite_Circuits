@@ -47,11 +47,9 @@ package version; a scientific correction also needs a clear correction note and
 a versioned record. API compatibility and demonstrated scientific scope are
 separate: a new adapter alone does not establish a new prerequisite mechanism.
 
-The GitHub release includes installable wheels and source distributions. PyPI
-publication is a separate step. For the first PyPI release, sign in to your PyPI
-account, verify its email address, and enable the required two-factor authentication.
-Then add a GitHub publisher under
-[Account settings → Publishing](https://pypi.org/manage/account/publishing/):
+The package is available on [PyPI](https://pypi.org/project/prerequisite-circuits/).
+Its configured [trusted publisher](https://docs.pypi.org/trusted-publishers/using-a-publisher/)
+connects these GitHub settings to the PyPI project:
 
 | Field | Value |
 |---|---|
@@ -61,28 +59,24 @@ Then add a GitHub publisher under
 | Workflow filename | `publish.yml` |
 | Environment | `pypi` |
 
-This is a [pending trusted publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/):
-the first successful upload creates the PyPI project. It does not require an API
-token in GitHub. The existing `pypi` GitHub environment and publishing workflow
-are already configured.
-
-After setting up the publisher, launch the workflow on the tested release tag:
+No PyPI API token is needed in GitHub. For each new version, update
+`pyproject.toml`, pass CI, and create a matching tag and GitHub release. Then launch
+the publishing workflow on that tag (replace `vX.Y.Z` below):
 
 ```bash
-gh workflow run publish.yml --repo KunwarK13/Prerequisite_Circuits --ref v0.1.0
+gh workflow run publish.yml --repo KunwarK13/Prerequisite_Circuits --ref vX.Y.Z
 ```
 
-The `v0.1.0` tag already exists. For later versions, create a new matching tag
-after CI passes; keep old tags and assets unchanged. Running this workflow on
-`main` fails its version check. The workflow tests and builds the package before
-uploading through PyPI's trusted publishing service.
+Keep old tags and assets unchanged, including the paper's `v0.1.0` release.
+Running this workflow on `main` fails its version check. The workflow tests and
+builds the package before uploading through PyPI's trusted publishing service.
 
 After the workflow succeeds, check the PyPI project page and install from PyPI
-in a fresh environment:
+in a fresh environment, substituting the version just published:
 
 ```bash
 python -m venv /tmp/prerequisite-pypi-check
-/tmp/prerequisite-pypi-check/bin/python -m pip install prerequisite-circuits==0.1.0
+/tmp/prerequisite-pypi-check/bin/python -m pip install prerequisite-circuits==X.Y.Z
 /tmp/prerequisite-pypi-check/bin/python -m pip check
 /tmp/prerequisite-pypi-check/bin/prereq --version
 ```

@@ -1,8 +1,15 @@
 # Package guide
 
-Install the base package for reading reports; add `[train]` for PyTorch and
-`[plot]` for figures. The package is version 0.1: the scientific scope is deliberately
-explicit and the API may change before 1.0.
+Install from [PyPI](https://pypi.org/project/prerequisite-circuits/):
+
+```bash
+python -m pip install prerequisite-circuits
+```
+
+The base package reads records and generates interactive HTML reports without
+third-party dependencies. Add `[train]` for PyTorch, `[plot]` for figures, or
+`[pythia]` for the Hugging Face GPT-NeoX integration. The package is version 0.1:
+the scientific scope is explicit and the API may change before 1.0.
 
 ## Attach to an existing trainer
 
@@ -111,9 +118,6 @@ The wheel and source distribution are built with `python -m build`. They contain
 the reusable package; the paper records and historical experiment sources are
 repository/release assets and are not installed into Python environments.
 
-For PyPI publication, a maintainer must configure a pending trusted publisher for
-`prerequisite-circuits`, using this repository's `publish.yml` workflow and the
-`pypi` environment. Then run **Publish package** from the tested release tag.
-The workflow uses GitHub's short-lived identity token; no PyPI API token belongs
-in the repository. A configured workflow alone does not mean a package has been
-published. Each PyPI version is immutable, so later changes need a new version.
+Releases are published through GitHub Actions using PyPI trusted publishing.
+See [Development and releases](development.md) for the release process. Each
+published version is immutable; later changes receive a new version.

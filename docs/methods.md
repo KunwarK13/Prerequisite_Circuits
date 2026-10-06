@@ -39,18 +39,41 @@ proof that learning is impossible.
 
 ## Future releases
 
-Version 0.1 evaluates supplied candidates and monitors intervention effectiveness.
-A discovery extension would screen candidates or groups, select them on separate
-development data, and test removal/control/rescue on fresh states. It should be
-compared with exhaustive search where possible, random search, and ordinary
-performance ablation at matched search cost. Current research states are
-development cases, not unseen validation.
+Keep one package and extend it as the evidence improves. These are milestones,
+not promised release dates:
 
-New capabilities require a task adapter (training data and readouts) and a
-mechanism adapter (what is changed and how restoration works). The interfaces need
-not assume induction, but the current paper does not validate general prerequisite
-discovery or a non-induction family. API stability, benchmark versions, and
-scientific coverage are separate release properties.
+| Stage | Addition | Release requirement |
+|---|---|---|
+| 0.1, available | Audit supplied candidates, apply scoped interventions, check replay, and inspect learning trajectories. | Tested software semantics and an explicit account of what each probe measures. |
+| Next maintenance releases | Fix bugs and improve integration with existing trainers. | Regression tests; preserve old reports or document a migration. |
+| Discovery release, if validated | Rank candidate components and groups for causal follow-up. | Predict held-out intervention outcomes at useful search cost, then confirm removal/control/rescue on fresh states. |
+| Broader-mechanism release, if validated | Add a distinct task and mechanism, such as a candidate MLP feature supporting factual acquisition. | Intact learning, selective intervention, appropriate restoration and rescue, and independent replications. |
+| 1.0 | Commit to a stable API and report schema. | Compatibility and maintenance guarantees; this is not a claim of universal scientific coverage. |
+
+The central research problem is selective removal: disable the proposed
+computation while preserving the model's ability to learn when that computation
+is available. Redundant implementations and recovery during training mean that
+removing a fixed set of heads may cease to remove the computation. More extensive
+damage can block learning for unrelated reasons. Independent probes, matched
+controls, and activation rescue help distinguish these cases.
+
+Start discovery in the controlled model, where exhaustive intervention search is
+feasible. Test groups as well as single heads; compare short-branch screening with
+random search and ordinary performance ablation at matched total search cost.
+Freeze selection rules before evaluating fresh states. Current research states
+are development cases, not unseen validation. A useful candidate ranking does
+not establish that a complete or unique circuit has been identified.
+
+New capabilities need a task adapter (training data and readouts) and a mechanism
+adapter (what changes and how restoration works). First establish that the intact
+model learns on held-out examples within a fixed budget. Then validate removal
+and rescue without selecting interventions on final outcomes. Probes must detect
+the intended computation rather than a task shortcut; supplied activations must
+remain compatible with the receiving model. Supporting another architecture alone
+does not establish a new prerequisite family.
+
+Task benchmarks, report schemas, and package versions remain separately versioned.
+Old evidence and releases stay reproducible when a new adapter is added.
 
 One prospective application is checking whether model compression preserves
 current performance while reducing future acquisition. That would require matched

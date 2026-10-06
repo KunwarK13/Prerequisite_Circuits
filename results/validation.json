@@ -119,6 +119,43 @@
     "json_roundtrip": "PASS",
     "offline_report_generation": "PASS",
     "base_install_requires_torch_or_numpy": false,
-    "scope": "Checks of the public GitHub artifacts; PyPI installation must also be verified after publication."
+    "scope": "Checks of the public GitHub artifacts; the PyPI artifacts and post-publication checks are recorded separately below."
+  },
+  "pypi_release": {
+    "version": "0.1.0",
+    "checked_on": "2026-10-05",
+    "url": "https://pypi.org/project/prerequisite-circuits/0.1.0/",
+    "source_commit": "263d146a6fb59f56d33284c8124636943326fdfc",
+    "publishing_workflow": "https://github.com/KunwarK13/Prerequisite_Circuits/actions/runs/37398564753",
+    "publishing_workflow_conclusion": "success",
+    "strict_metadata_check": "PASS",
+    "wheel_contents_check": "PASS",
+    "files": {
+      "prerequisite_circuits-0.1.0-py3-none-any.whl": "5c86515a273fa241e62e742b6de906b3470f75ecd0ce82e794f2d45402e615a8",
+      "prerequisite_circuits-0.1.0.tar.gz": "1482b074214fee56b7d16a11c5a8be7ec9750599877f201786b0b2baea45e023"
+    },
+    "package_payload_matches_github_release": true,
+    "clean_pypi_installations": {
+      "wheel": {
+        "pip_check": "No broken requirements found.",
+        "version": "0.1.0",
+        "api_and_json_roundtrip": "PASS",
+        "offline_report_generation": "PASS",
+        "torch_or_numpy_installed": false
+      },
+      "source": {
+        "pip_check": "No broken requirements found.",
+        "version": "0.1.0",
+        "api_and_json_roundtrip": "PASS",
+        "offline_report_generation": "PASS",
+        "torch_or_numpy_installed": false
+      }
+    },
+    "installed_report_browser": {
+      "desktop_and_mobile": "PASS",
+      "record_export": "PASS",
+      "javascript_errors": [],
+      "network_requests": false
+    }
   }
 }
