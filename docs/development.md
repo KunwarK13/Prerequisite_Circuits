@@ -47,9 +47,11 @@ package version; a scientific correction also needs a clear correction note and
 a versioned record. API compatibility and demonstrated scientific scope are
 separate: a new adapter alone does not establish a new prerequisite mechanism.
 
-For the first PyPI release, create a
-[pending trusted publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
-under your PyPI account:
+The GitHub release includes installable wheels and source distributions. PyPI
+publication is a separate step. For the first PyPI release, sign in to your PyPI
+account, verify its email address, and enable the required two-factor authentication.
+Then add a GitHub publisher under
+[Account settings → Publishing](https://pypi.org/manage/account/publishing/):
 
 | Field | Value |
 |---|---|
@@ -59,11 +61,35 @@ under your PyPI account:
 | Workflow filename | `publish.yml` |
 | Environment | `pypi` |
 
-Once CI passes on the release commit, tag it (for example `v0.1.0`) and run
-**Publish package** on that tag. Do not dispatch it until the publisher is
-configured. Confirm the uploaded distributions and test installation in a fresh
-environment. The Python package name uses a hyphen; the GitHub repository retains
-its original underscore.
+This is a [pending trusted publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/):
+the first successful upload creates the PyPI project. It does not require an API
+token in GitHub. The existing `pypi` GitHub environment and publishing workflow
+are already configured.
+
+After setting up the publisher, launch the workflow on the tested release tag:
+
+```bash
+gh workflow run publish.yml --repo KunwarK13/Prerequisite_Circuits --ref v0.1.0
+```
+
+The `v0.1.0` tag already exists. For later versions, create a new matching tag
+after CI passes; keep old tags and assets unchanged. Running this workflow on
+`main` fails its version check. The workflow tests and builds the package before
+uploading through PyPI's trusted publishing service.
+
+After the workflow succeeds, check the PyPI project page and install from PyPI
+in a fresh environment:
+
+```bash
+python -m venv /tmp/prerequisite-pypi-check
+/tmp/prerequisite-pypi-check/bin/python -m pip install prerequisite-circuits==0.1.0
+/tmp/prerequisite-pypi-check/bin/python -m pip check
+/tmp/prerequisite-pypi-check/bin/prereq --version
+```
+
+On Windows, use the environment's `Scripts` directory instead of `bin`. Confirm
+that the installed CLI generates a report before announcing the release. The
+Python package name uses a hyphen; the GitHub repository retains its underscore.
 
 Future discovery methods and non-induction task adapters belong in this same
 package, accompanied by suitable fresh validation and versioned examples.
