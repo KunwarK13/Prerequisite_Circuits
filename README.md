@@ -5,7 +5,8 @@
 **Track what an intervention removes—and whether it stays removed as a model learns.**
 
 Code and evidence accompanying *When Data Can Teach: Prerequisite Circuits Gate
-Learning*, by **Kunwar Kalra and Thanush Patlolla**. Submitted to ICLR 2027;
+Learning*, by **[Kunwar Kalra](https://github.com/KunwarK13)** and
+**[Thanush Patlolla](https://github.com/thanushpatlolla)**. Submitted to ICLR 2027;
 an arXiv link will be added when available.
 
 [Paper](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/paper/main.pdf) · [Reproduction](https://github.com/KunwarK13/Prerequisite_Circuits/blob/main/docs/reproduction.md) ·
